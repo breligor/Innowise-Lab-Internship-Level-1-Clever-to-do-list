@@ -21,7 +21,9 @@
     <p v-if="errMsg">{{ errMsg }}</p>
     <button class="btn" @click="register">SIGN IN</button>
     <nav>
-      <router-link class="link" to="/register">Don't have account yet?</router-link>
+      <router-link class="link" to="/register"
+        >Don't have account yet?</router-link
+      >
       <button @click="handleSignOut" v-if="isLoggedIn">Sign out</button>
     </nav>
   </main>
@@ -66,23 +68,22 @@ const register = () => {
 </script>
 
 <style lang="scss" scoped>
-
 main {
   background-color: rgb(100, 50, 122);
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  box-shadow:0 10px 10px -5px black;
+  box-shadow: 0 10px 10px -5px black;
   border-radius: 3px;
 }
 .input {
-  margin-bottom: 10px;  
+  margin-bottom: 10px;
   width: 200px;
   height: 30px;
   border: 0;
   border-bottom: 2px solid rgb(255, 251, 251);
-  outline: 0;  
+  outline: 0;
   color: antiquewhite;
   padding: 7px 0;
   background: transparent;
@@ -92,7 +93,6 @@ h1 {
   color: rgb(253, 253, 253);
   font-size: 15px;
   letter-spacing: 2px;
-  
 }
 .btn {
   margin-bottom: 15px;
@@ -104,8 +104,8 @@ h1 {
   }
 }
 .link {
-text-decoration: none;
-color: antiquewhite;
+  text-decoration: none;
+  color: antiquewhite;
   font-size: 15px;
 }
 </style>
