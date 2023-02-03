@@ -1,11 +1,7 @@
 <template>
-  <nav>
-    <!-- <router-link to="/">Home</router-link> | -->
-    <!-- <router-link to="/feed">Feed</router-link> |  -->
-    <!-- <router-link to="/register">Register</router-link>  -->
-    <!-- <router-link to="/sign-in">SignIn</router-link> -->
+  <div class="btnWrapper">
     <button @click="handleSignOut" v-if="isLoggedIn">Sign out</button>
-  </nav>
+  </div>
   <router-view />
 </template>
 
@@ -13,11 +9,9 @@
 import { onMounted, onBeforeMount, ref } from "vue";
 import { useRouter } from "vue-router";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-
 const router = useRouter();
 const isLoggedIn = ref(false);
 let auth;
-
 onBeforeMount(() => {
   auth = getAuth();
   onAuthStateChanged(auth, (user) => {
@@ -28,7 +22,6 @@ onBeforeMount(() => {
     }
   });
 });
-
 onMounted(() => {
   auth = getAuth();
   onAuthStateChanged(auth, (user) => {
@@ -39,7 +32,6 @@ onMounted(() => {
     }
   });
 });
-
 const handleSignOut = () => {
   signOut(auth).then(() => {
     router.push("/sign-in");
@@ -53,10 +45,18 @@ const handleSignOut = () => {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   height: 100vh;
 }
 main {
   width: 400px;
   height: 400px;
+}
+.btnWrapper {
+  
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+
 }
 </style>
