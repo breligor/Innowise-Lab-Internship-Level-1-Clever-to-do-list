@@ -4,7 +4,7 @@ import router from "./router";
 
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
-import { getFirestore } from "firebase/firestore";
+import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBFSEdbMDCv-GDl-HNgwHtjb2gN8lt2X90",
@@ -16,8 +16,8 @@ const firebaseConfig = {
   messagingSenderId: "915399087042",
   appId: "1:915399087042:web:ea3945101f2d074ac17c5b",
 };
-const FirebaseApp = firebase.initializeApp(firebaseConfig); //firebase init
-export const db = getFirestore(FirebaseApp); // database
+const FirebaseApp = firebase.initializeApp(firebaseConfig);
+export const db = getDatabase();
 
 const app = createApp(App);
 app.use(router).mount("#app");
