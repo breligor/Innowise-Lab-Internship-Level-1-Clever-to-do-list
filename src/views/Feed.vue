@@ -27,10 +27,8 @@
             <div class="btnWrapper">
               <input class="through" v-model="task.completed" type="checkbox" />
               <button class="del" @click="deleteTask(i)">x</button>
-              <router-link class="todoItemlink" to="/todoItem"
-              tag="button"             
-                >edit</router-link
-              >
+              <router-link class="todoItemlink" to="/todoItem" tag="button"
+                >edit</router-link>
             </div>
           </div>
         </li>
@@ -44,7 +42,7 @@ import { ref, reactive } from "vue";
 
 import baseInput from "@/components/baseInput.vue";
 import { db } from "../main.js";
-import { ref as fbRef, set } from "firebase/database";
+import { ref as fbRef, set, onValue } from "firebase/database";
 import { useRouter } from "vue-router";
 import { getAuth } from "firebase/auth";
 
@@ -57,17 +55,16 @@ const currentDate = Date.now();
 const taskArr = reactive([]);
 const isComplete = false;
 const date = new Date();
-const taskId = date.setDate(date.getDate());
+let taskId = 1;
 
 //set data to firebase db
-function writeUserData() {
-  set(
+async function writeUserData() {
+  await set(
     fbRef(
       db,
-      "users/" +
-        `${"userId : " + userId}/${"currentDate : " + currentDate}/${
-          "taskId : " + taskId
-        }`
+      `${"userId : " + userId}/${"currentDate : " + currentDate}/${
+        "taskId : " + taskId++
+      }`
     ),
     {
       mail: user.email,
@@ -77,6 +74,13 @@ function writeUserData() {
     }
   );
 }
+
+// const readDB = fbRef(db, userId);
+
+// onValue(readDB, (snapshot) => {
+//   const data = snapshot.val();
+// addTask(data);
+// });
 
 //add task to task list
 const addTask = () => {
@@ -159,5 +163,4 @@ button {
   text-transform: uppercase;
   font-size: 10px;
 }
-
 </style>
