@@ -12,19 +12,26 @@
           required
           class="input"
         />
-        <button @click="addTask" type="submit">add task</button>
+        <button class="addBtn" @click="addTask" type="submit">add task</button>
       </form>
     </div>
     <div>
       <ol>
-        <li v-for="task in taskArr" :key="task.id">
-          <div>
-            <p :class="{ task_isDone: task.completed }">
-              {{ task.description }}
-            </p>
-          </div>
-          <div>
-            <input v-model="task.completed" type="checkbox" />
+        <li v-for="(task, i) in taskArr" :key="task.id">
+          <div class="li">
+            <div>
+              <p :class="{ task_isDone: task.completed }">
+                {{ task.description }}
+              </p>
+            </div>
+            <div class="btnWrapper">
+              <input class="through" v-model="task.completed" type="checkbox" />
+              <button class="del" @click="deleteTask(i)">x</button>
+              <router-link class="todoItemlink" to="/todoItem"
+              tag="button"             
+                >edit</router-link
+              >
+            </div>
           </div>
         </li>
       </ol>
@@ -81,6 +88,9 @@ const addTask = () => {
   taskArr.push(newTask);
   //taskDescription.value = ""; clear input after submit
 };
+const deleteTask = (i) => {
+  taskArr.splice(i, 1);
+};
 </script>
 
 <style lang="scss" scoped>
@@ -91,7 +101,7 @@ main {
   align-items: center;
   height: 100vh;
 }
-button {
+.addBtn {
   width: 100px;
 }
 .formWrapper {
@@ -115,4 +125,39 @@ button {
 button {
   cursor: pointer;
 }
+.del {
+  width: 15px;
+  height: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.through {
+  width: 15px;
+  height: 15px;
+}
+.li {
+  width: 800px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.btnWrapper {
+  width: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.todoItemlink {
+  width: 35px;
+  height: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  color: #000;
+  text-transform: uppercase;
+  font-size: 10px;
+}
+
 </style>
