@@ -21,14 +21,15 @@
           <div class="li">
             <div>
               <p :class="{ task_isDone: task.completed }">
-                {{ task.description }}
+                {{ task.taskDescription }}
               </p>
             </div>
             <div class="btnWrapper">
               <input class="through" v-model="task.completed" type="checkbox" />
               <button class="del" @click="deleteTask(i)">x</button>
               <router-link class="todoItemlink" to="/todoItem" tag="button"
-                >edit</router-link>
+                >edit</router-link
+              >
             </div>
           </div>
         </li>
@@ -38,8 +39,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
-
+import { ref, reactive, onBeforeMount } from "vue";
 import baseInput from "@/components/baseInput.vue";
 import { db } from "../main.js";
 import { ref as fbRef, set, onValue } from "firebase/database";
@@ -52,46 +52,63 @@ const auth = getAuth();
 const user = auth.currentUser;
 const userId = user.uid;
 const currentDate = Date.now();
-const taskArr = reactive([]);
+let taskArr = reactive([]);
 const isComplete = false;
 const date = new Date();
-let taskId = 1;
+let taskId = 0;
+const readDB = fbRef(db, userId);
+
+onBeforeMount(() => {
+  console.log("Компонент примонтирован!");
+  // подписываемся на DB через websocet и получаем данные конкретного юзера в виде массива тасок
+  onValue(readDB, (snapshot) => {
+    console.log(snapshotToArray(snapshot));
+    taskArr = snapshotToArray(snapshot);
+    console.log(taskArr);
+    // const data = snapshot.val();
+    // console.log(taskArr);
+    // console.log(userId);
+    // console.log(data);
+  });
+});
 
 //set data to firebase db
 async function writeUserData() {
-  await set(
-    fbRef(
-      db,
-      `${"userId : " + userId}/${"currentDate : " + currentDate}/${
-        "taskId : " + taskId++
-      }`
-    ),
-    {
-      mail: user.email,
-      taskDescription: taskDescription.value,
-      completed: isComplete,
-      creationTime: currentDate,
-    }
-  );
+  await set(fbRef(db, `${userId}/${currentDate}/${taskId++}`), {
+    mail: user.email,
+    taskDescription: taskDescription.value,
+    completed: isComplete,
+    creationTime: currentDate,
+  });
 }
 
-// const readDB = fbRef(db, userId);
+// преобразуем snapshot в массив тасок
+function snapshotToArray(snapshot) {
+  var returnArr = [];
+  snapshot.forEach(function (childSnapshot) {
+    var item = childSnapshot.val();
+    item.key = childSnapshot.key;
+    returnArr.push(item);
+  });
 
-// onValue(readDB, (snapshot) => {
-//   const data = snapshot.val();
-// addTask(data);
-// });
+  return returnArr.flat();
+}
+
+function update() {
+  const newTask = {
+    mail: user.email,
+    taskDescription: taskDescription.value,
+    completed: isComplete,
+    creationTime: currentDate,
+  };
+  const updates = {};
+  updates[`${userId}/${currentDate}/${taskId++}`] = newTask;
+  return update(fbRef(db), updates);
+}
 
 //add task to task list
-const addTask = () => {
-  const newTask = {
-    description: taskDescription.value,
-    id: taskId,
-    completed: isComplete,
-  };
-  taskArr.push(newTask);
-  //taskDescription.value = ""; clear input after submit
-};
+const addTask = () => {};
+
 const deleteTask = (i) => {
   taskArr.splice(i, 1);
 };
