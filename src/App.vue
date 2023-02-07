@@ -53,10 +53,8 @@ main {
   height: 400px;
 }
 .btnWrapper {
-  
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
 }
 </style>

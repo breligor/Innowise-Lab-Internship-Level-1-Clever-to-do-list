@@ -58,18 +58,14 @@ const date = new Date();
 let taskId = 0;
 const readDB = fbRef(db, userId);
 
-onBeforeMount(() => {
-  console.log("Компонент примонтирован!");
-  // подписываемся на DB через websocet и получаем данные конкретного юзера в виде массива тасок
-  onValue(readDB, (snapshot) => {
-    console.log(snapshotToArray(snapshot));
-    taskArr = snapshotToArray(snapshot);
-    console.log(taskArr);
-    // const data = snapshot.val();
-    // console.log(taskArr);
-    // console.log(userId);
-    // console.log(data);
-  });
+onValue(readDB, (snapshot) => {
+  console.log(snapshotToArray(snapshot));
+  taskArr = snapshotToArray(snapshot);
+  console.log(taskArr);
+  // const data = snapshot.val();
+  // console.log(taskArr);
+  // console.log(userId);
+  // console.log(data);
 });
 
 //set data to firebase db

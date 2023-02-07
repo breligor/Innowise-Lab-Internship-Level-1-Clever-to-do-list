@@ -1,3 +1,4 @@
+<!-- eslint-disable prettier/prettier -->
 <template>
   <div>
     <div class="taskWindow">
@@ -17,17 +18,20 @@
 <script setup>
 import { ref as dbRef, onValue } from "firebase/database";
 import { db } from "../main.js";
-import { userId } from "../views/Feed.vue";
+import { userId, taskArr } from "../views/Feed.vue";
 
-const readDB = dbRef(db, userId);
-onValue(readDB, (snapshot) => {
-  const data = snapshot.val();
-  putData(data);
-});
-const putData = (data) => {
-  console.log(data);
-  console.log(userId)
-};
+// const readDB = dbRef(db, userId);
+
+// onValue(readDB, (snapshot) => {
+
+//   const data = snapshot.val();  
+
+//   putData(data);
+
+// });
+// const putData = (data) => {
+//   console.log(data);
+// };
 </script>
 
 <style lang="scss" scoped>
