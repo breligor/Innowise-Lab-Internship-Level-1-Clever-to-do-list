@@ -39,6 +39,7 @@ const email = ref("");
 const password = ref("");
 const router = useRouter();
 const errMsg = ref("");
+
 const register = () => {
   const auth = getAuth();
 
@@ -46,7 +47,7 @@ const register = () => {
     .then((data) => {
       console.log("Succesfully signed in");
 
-      router.push("/feed");
+      router.push("/");
     })
     .catch((error) => {
       switch (error.code) {

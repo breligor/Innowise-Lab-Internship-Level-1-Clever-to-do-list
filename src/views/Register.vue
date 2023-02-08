@@ -43,7 +43,7 @@ const register = () => {
     createUserWithEmailAndPassword(auth, email.value, password.value)
       .then((data) => {
         console.log("Succesfully registered");
-        router.push("/feed");
+        router.push("/");
       })
       .catch((error) => {
         //console.log(error.code);

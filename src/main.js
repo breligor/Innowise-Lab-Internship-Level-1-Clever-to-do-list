@@ -6,6 +6,7 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import { getDatabase } from "firebase/database";
 
+
 const firebaseConfig = {
   apiKey: "AIzaSyBFSEdbMDCv-GDl-HNgwHtjb2gN8lt2X90",
   authDomain: "todo-vue-f2bff.firebaseapp.com",

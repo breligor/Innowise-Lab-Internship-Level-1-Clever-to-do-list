@@ -9,9 +9,11 @@
 import { onMounted, onBeforeMount, ref } from "vue";
 import { useRouter } from "vue-router";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+
 const router = useRouter();
 const isLoggedIn = ref(false);
 let auth;
+
 onBeforeMount(() => {
   auth = getAuth();
   onAuthStateChanged(auth, (user) => {
@@ -22,6 +24,7 @@ onBeforeMount(() => {
     }
   });
 });
+
 onMounted(() => {
   auth = getAuth();
   onAuthStateChanged(auth, (user) => {
@@ -32,12 +35,14 @@ onMounted(() => {
     }
   });
 });
+
 const handleSignOut = () => {
   signOut(auth).then(() => {
     router.push("/sign-in");
     console.log("Succesfully signed out");
   });
 };
+
 </script>
 
 <style lang="scss">
