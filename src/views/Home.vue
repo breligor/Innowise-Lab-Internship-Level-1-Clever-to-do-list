@@ -26,52 +26,56 @@
           </p>
         </div>
       </form>
-      <div class="todo-item-wrapper">
-        <div
-          :class="{ 'has-background-success-light': todo.done }"
-          class="card mb-5"
-          v-for="todo in todos"
-        >
-          <div class="card-content">
-            <div class="content">
-              <div class="is-flex is-justify-content-space-between">
-                <div class="todo-content">
-                  <div
-                    v-if="!todo.editing"
-                    @dblclick="editTodo(todo)"
-                    class="column"
-                    :class="{ 'has-text-success line-through': todo.done }"
-                    title="double click to edit"
-                  >
-                    {{ todo.content }}
+      <div class="todo-item-wrapper-scroll">
+        <div class="todo-item-wrapper">
+          <div
+            :class="{ 'has-background-success-light': todo.done }"
+            class="card mb-5"
+            v-for="todo in todos"
+          >
+            <div class="card-content">
+              <div class="content">
+                <div class="is-flex is-justify-content-space-between">
+                  <div class="todo-content">
+                    <div
+                      v-if="!todo.editing"
+                      @dblclick="editTodo(todo)"
+                      class="column"
+                      :class="{ 'has-text-success line-through': todo.done }"
+                      title="double click to edit"
+                    >
+                      {{ todo.content }}
+                    </div>
+                    <input
+                      v-else
+                      class="input editInput"
+                      v-model="todo.content"
+                      type="text"
+                      @blur="doneEdit(todo, todo.id)"
+                      @keyup.enter="doneEdit(todo, todo.id)"
+                    />
                   </div>
-                  <input
-                    v-else
-                    class="input editInput"
-                    v-model="todo.content"
-                    type="text"
-                    @blur="doneEdit(todo, todo.id)"
-                    @keyup.enter="doneEdit(todo, todo.id)"
-                  />
-                </div>
 
-                <div class="is-flex is-justify-content-space-between is-align-items-center">
-                  <div class="is-flex is-align-items-center">
-                    <p class="control" >{{ todo.taskDate }}</p>
+                  <div
+                    class="is-flex is-justify-content-space-between is-align-items-center"
+                  >
+                    <div class="is-flex is-align-items-center">
+                      <p class="control">{{ todo.taskDate }}</p>
+                    </div>
+                    <button
+                      @click="toggleDone(todo.id)"
+                      :class="todo.done ? 'is-success' : 'is-light'"
+                      class="button ml-2"
+                    >
+                      &check;
+                    </button>
+                    <button
+                      @click="deleteTodo(todo.id)"
+                      class="button is-danger ml-2"
+                    >
+                      &cross;
+                    </button>
                   </div>
-                  <button
-                    @click="toggleDone(todo.id)"
-                    :class="todo.done ? 'is-success' : 'is-light'"
-                    class="button ml-2"
-                  >
-                    &check;
-                  </button>
-                  <button
-                    @click="deleteTodo(todo.id)"
-                    class="button is-danger ml-2"
-                  >
-                    &cross;
-                  </button>
                 </div>
               </div>
             </div>
@@ -120,6 +124,8 @@ const addTodo = () => {
     taskDate: makeDay.value,
   });
   newTodoContent.value = "";
+  console.log(makeDay);
+  console.log(makeDay.value);
   makeDay.value = "";
 };
 
@@ -156,6 +162,8 @@ onMounted(() => {
       fbTodos.push(todo);
     });
     todos.value = fbTodos;
+    console.log(fbTodos);
+    console.log(todos.value);
   });
 });
 
@@ -226,4 +234,13 @@ main {
   outline: none;
   box-shadow: none;
 }
+.todo-item-wrapper-scroll {
+  overflow-y: auto;
+  max-height: 600px;
+}
+/* .todo-item-wrapper {
+  
+  
+  
+} */
 </style>
