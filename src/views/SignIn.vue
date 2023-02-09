@@ -1,31 +1,56 @@
 <template>
   <main>
-    <router-view />
-    <h1>SIGN IN YOUR ACCAUNT</h1>
-    <div>
-      <baseInput
-        class="input"
-        v-model="email"
-        type="email"
-        placeholder="Email"
-      />
+    <div class="box">
+      <div class="block is-flex is-justify-content-center">
+        <h1 class="subtitle">create your todo</h1>
+      </div>
+
+      <div class="tabs">
+        <ul class="is-justify-content-center">
+          <li class="is-active"><a>Sign in</a></li>
+          <li>
+            <router-link class="link" to="/register">Register</router-link>
+          </li>
+        </ul>
+      </div>
+      <div class="field">
+        <p class="control has-icons-left has-icons-right">
+          <baseInput
+            class="input"
+            v-model="email"
+            type="email"
+            placeholder="Email"
+          />
+          <span class="icon is-small is-left">
+            <i class="fas fa-envelope"></i>
+          </span>
+          <span class="icon is-small is-right">
+            <i class="fas fa-check"></i>
+          </span>
+        </p>
+      </div>
+      <div class="field">
+        <p class="control has-icons-left">
+          <baseInput
+            class="input"
+            v-model="password"
+            type="password"
+            placeholder="Password"
+          />
+          <span class="icon is-small is-left">
+            <i class="fas fa-lock"></i>
+          </span>
+        </p>
+        <div class="block is-flex is-justify-content-center">
+          <p class="subtitle" v-if="errMsg">{{ errMsg }}</p>
+        </div>
+      </div>
+      <div class="field">
+        <p class="control is-flex is-justify-content-center">
+          <button @click="signIn" class="button is-success">Login</button>
+        </p>
+      </div>
     </div>
-    <div>
-      <baseInput
-        class="input"
-        v-model="password"
-        type="password"
-        placeholder="Password"
-      />
-    </div>
-    <p v-if="errMsg">{{ errMsg }}</p>
-    <button class="btn" @click="register">SIGN IN</button>
-    <nav>
-      <router-link class="link" to="/register"
-        >Don't have account yet?</router-link
-      >
-      <button @click="handleSignOut" v-if="isLoggedIn">Sign out</button>
-    </nav>
   </main>
 </template>
 
@@ -40,7 +65,7 @@ const password = ref("");
 const router = useRouter();
 const errMsg = ref("");
 
-const register = () => {
+const signIn = () => {
   const auth = getAuth();
 
   signInWithEmailAndPassword(auth, email.value, password.value)
@@ -69,44 +94,14 @@ const register = () => {
 </script>
 
 <style lang="scss" scoped>
+@import "bulma/css/bulma.min.css";
 main {
-  background-color: rgb(100, 50, 122);
   display: flex;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
   flex-direction: column;
-  box-shadow: 0 10px 10px -5px black;
-  border-radius: 3px;
-}
-.input {
-  margin-bottom: 10px;
-  width: 200px;
-  height: 30px;
-  border: 0;
-  border-bottom: 2px solid rgb(255, 251, 251);
-  outline: 0;
-  color: antiquewhite;
-  padding: 7px 0;
-  background: transparent;
-  transition: border-color 0.2s;
-}
-h1 {
-  color: rgb(253, 253, 253);
-  font-size: 15px;
-  letter-spacing: 2px;
-}
-.btn {
-  margin-bottom: 15px;
-  margin-top: 10px;
-  width: 80px;
-  height: 30px;
-  &:hover {
-    cursor: pointer;
-  }
-}
-.link {
-  text-decoration: none;
-  color: antiquewhite;
-  font-size: 15px;
+  height: 100vh;
+  width: 100%;
+  padding-top: 50px;
 }
 </style>
