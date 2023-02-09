@@ -1,6 +1,12 @@
 <template>
   <div class="btnWrapper">
-    <button @click="handleSignOut" v-if="isLoggedIn">Sign out</button>
+    <button
+      @click="handleSignOut"
+      v-if="isLoggedIn"
+      class="button is-danger is-hovered"
+    >
+      Get out
+    </button>
   </div>
   <router-view />
 </template>
@@ -42,26 +48,16 @@ const handleSignOut = () => {
     console.log("Succesfully signed out");
   });
 };
-
 </script>
 
 <style lang="scss">
 #app {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  height: 100vh;
 }
-main {
-  width: 400px;
-  height: 400px;
-}
-.btnWrapper {
-  
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
 
+.btnWrapper {
+  padding: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
 }
 </style>
