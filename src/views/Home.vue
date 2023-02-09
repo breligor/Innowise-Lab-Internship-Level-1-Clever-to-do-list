@@ -17,6 +17,9 @@
             />
           </p>
           <p class="control">
+            <input class="input" type="date" v-model="makeDay" />
+          </p>
+          <p class="control">
             <button :disabled="!newTodoContent" class="button is-info">
               Add
             </button>
@@ -32,7 +35,7 @@
           <div class="card-content">
             <div class="content">
               <div class="is-flex is-justify-content-space-between">
-                <div class="is-flex">
+                <div class="todo-content">
                   <div
                     v-if="!todo.editing"
                     @dblclick="editTodo(todo)"
@@ -44,7 +47,7 @@
                   </div>
                   <input
                     v-else
-                    class="input"
+                    class="input editInput"
                     v-model="todo.content"
                     type="text"
                     @blur="doneEdit(todo, todo.id)"
@@ -52,11 +55,14 @@
                   />
                 </div>
 
-                <div class="column is-3 had-text-right">
+                <div class="is-flex is-justify-content-space-between is-align-items-center">
+                  <div class="is-flex is-align-items-center">
+                    <p class="control" >{{ todo.taskDate }}</p>
+                  </div>
                   <button
                     @click="toggleDone(todo.id)"
                     :class="todo.done ? 'is-success' : 'is-light'"
-                    class="button"
+                    class="button ml-2"
                   >
                     &check;
                   </button>
@@ -74,9 +80,11 @@
       </div>
     </div>
   </main>
+  <calendar></calendar>
 </template>
 
 <script setup>
+import calendar from "@/components/calendar.vue";
 import { ref, onMounted } from "vue";
 import { dbStore } from "@/main";
 import { getAuth } from "firebase/auth";
@@ -99,6 +107,7 @@ const todos = ref([]);
 const newTodoContent = ref("");
 const todosCollectionRef = collection(dbStore, `${userId}`);
 const todosCollectionQuery = query(todosCollectionRef, orderBy("date", "desc"));
+const makeDay = ref("");
 
 const addTodo = () => {
   addDoc(todosCollectionRef, {
@@ -108,8 +117,10 @@ const addTodo = () => {
     userId: userId,
     mail: user.email,
     editing: false,
+    taskDate: makeDay.value,
   });
   newTodoContent.value = "";
+  makeDay.value = "";
 };
 
 //get todos
@@ -140,6 +151,7 @@ onMounted(() => {
         userId: userId,
         mail: user.email,
         editing: false,
+        taskDate: doc.data().taskDate,
       };
       fbTodos.push(todo);
     });
@@ -190,7 +202,7 @@ main {
 }
 .wrapperTodo {
   width: 100%;
-  max-width: 600px;
+  max-width: 800px;
   padding: 20px;
   display: flex;
   justify-content: center;
@@ -199,8 +211,19 @@ main {
 .line-through {
   text-decoration: line-through;
 }
-.todo-item-wrapper {
-  min-height: 70%vh;
+.editInput {
+  width: 100%;
+}
+.todo-content {
+  width: 100%;
+  max-width: 400px;
   overflow: hidden;
+  overflow-wrap: break-word;
+}
+.makeDate {
+  width: 110px;
+  border: none;
+  outline: none;
+  box-shadow: none;
 }
 </style>
