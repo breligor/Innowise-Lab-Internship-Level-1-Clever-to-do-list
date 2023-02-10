@@ -79,14 +79,13 @@ import baseInput from "@/components/baseInput.vue";
 
 const email = ref("");
 const password = ref("");
-const userName = ref("");
 const confirmPassword = ref("");
 const router = useRouter();
 const auth = getAuth();
 const register = () => {
   if (confirmPassword.value === password.value) {
     createUserWithEmailAndPassword(auth, email.value, password.value)
-      .then((data) => {
+      .then(() => {
         console.log("Succesfully registered");
         router.push("/");
       })

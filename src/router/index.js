@@ -6,21 +6,14 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      component: () => import("../views/Home.vue"),
+      component: () => import("../views/homePage.vue"),
       meta: {
         requireAuth: true,
       },
-    },
-    { path: "/todoItem", component: () => import("../views/todoItem.vue") },
-    { path: "/register", component: () => import("../views/Register.vue") },
-    { path: "/sign-in", component: () => import("../views/SignIn.vue") },
-    {
-      path: "/feed",
-      component: () => import("../views/Feed.vue"),
-      meta: {
-        requireAuth: true,
-      },
-    },
+    },   
+    { path: "/register", component: () => import("../views/registerPage.vue") },
+    { path: "/sign-in", component: () => import("../views/signInPage.vue") },   
+    
   ],
 });
 

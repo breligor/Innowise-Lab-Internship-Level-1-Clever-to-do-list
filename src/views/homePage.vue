@@ -31,7 +31,7 @@
           <div
             :class="{ 'has-background-success-light': todo.done }"
             class="card mb-5"
-            v-for="todo in todos"
+            v-for="todo in todos" :key="todo.id"
           >
             <div class="card-content">
               <div class="content">
@@ -84,11 +84,11 @@
       </div>
     </div>
   </main>
-  <calendar></calendar>
+  <calendarComponent></calendarComponent>
 </template>
 
 <script setup>
-import calendar from "@/components/calendar.vue";
+import calendarComponent from "@/components/calendarComponent.vue";
 import { ref, onMounted } from "vue";
 import { dbStore } from "@/main";
 import { getAuth } from "firebase/auth";
@@ -101,7 +101,6 @@ import {
   updateDoc,
   query,
   orderBy,
-  limit,
 } from "@firebase/firestore";
 
 const auth = getAuth();

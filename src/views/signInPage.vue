@@ -69,9 +69,8 @@ const signIn = () => {
   const auth = getAuth();
 
   signInWithEmailAndPassword(auth, email.value, password.value)
-    .then((data) => {
+    .then(() => {
       console.log("Succesfully signed in");
-
       router.push("/");
     })
     .catch((error) => {
