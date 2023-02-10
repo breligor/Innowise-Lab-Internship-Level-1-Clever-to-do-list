@@ -1,5 +1,5 @@
 <template>
-  <calendarComponent></calendarComponent>
+  <calendarComponent class="calendar"></calendarComponent>
   <main>
     <div class="wrapperTodo">
       <div class="btnWrapper">
@@ -221,5 +221,8 @@ main {
 .todo-item-wrapper-scroll {
   overflow-y: auto;
   max-height: 600px;
+}
+.calendar{
+  height: 200px;
 }
 </style>
