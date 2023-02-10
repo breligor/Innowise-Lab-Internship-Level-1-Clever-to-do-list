@@ -1,4 +1,5 @@
 <template>
+  <calendarComponent></calendarComponent>
   <main>
     <div class="wrapperTodo">
       <div class="btnWrapper">
@@ -31,7 +32,8 @@
           <div
             :class="{ 'has-background-success-light': todo.done }"
             class="card mb-5"
-            v-for="todo in todos" :key="todo.id"
+            v-for="todo in todos"
+            :key="todo.id"
           >
             <div class="card-content">
               <div class="content">
@@ -84,7 +86,6 @@
       </div>
     </div>
   </main>
-  <calendarComponent></calendarComponent>
 </template>
 
 <script setup>
@@ -128,23 +129,7 @@ const addTodo = () => {
   makeDay.value = "";
 };
 
-//get todos
-//onMounted(async () => {
-//   const querySnapshot = await getDocs(collection(dbStore, "todos"));
-//   let fbTodos = []
-// querySnapshot.forEach((doc) => {
-//    console.log(doc.id, " => ", doc.data());
-//    const todo = {
-//     id: doc.id,
-//     content: doc.data().content,
-//     done: doc.data().done
-//    }
-//    fbTodos.push(todo)
-// });
-// });
-// });
-
-//update todos
+//подписка FB
 onMounted(() => {
   onSnapshot(todosCollectionQuery, (querySnapshot) => {
     const fbTodos = [];
@@ -196,7 +181,7 @@ const doneEdit = (todo, id) => {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
 @import "bulma/css/bulma.min.css";
 main {
   display: flex;
@@ -237,9 +222,4 @@ main {
   overflow-y: auto;
   max-height: 600px;
 }
-/* .todo-item-wrapper {
-  
-  
-  
-} */
 </style>

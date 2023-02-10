@@ -2,15 +2,11 @@
   <div id="calendar">
     <div class="calendar-header">
       <button @click="monthAgo" class="button is-rounded">prev</button>
-
       <h1 class="subtitle">{{ monthList[month] }} {{ year }}</h1>
-
       <button class="button is-rounded" @click="monthAHead">next</button>
     </div>
     <div>
       <div class="tablet">
-        <!-- <div class="day" :key="day" v-for="day in days">{{ day }}</div> -->
-
         <div
           :class="{
             current: date.getDate() === nowDate,
@@ -82,7 +78,6 @@ export default {
       return dates;
     },
   },
-
   methods: {
     monthAgo() {
       this.month--;
@@ -102,13 +97,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 @import "bulma/css/bulma.min.css";
 
-#calendar {
-  margin: 0 auto;
-  padding: 50px 10px;
-}
 .calendar-header {
   display: flex;
   justify-content: space-around;
@@ -116,14 +107,9 @@ export default {
 .calendar-header:not(:last-child) {
   margin-bottom: 20px;
 }
-h2 {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--main-color-black);
-}
 .date {
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   border: 1px solid #fff;
   padding: 3px;
   text-align: center;
@@ -141,7 +127,7 @@ h2 {
   font-size: 8px;
 }
 .date:hover {
-  background-color: rgb(44, 56, 90);
+  background-color: rgb(169, 178, 205);
   transition: all 0.3s ease 0s;
 }
 .current {
@@ -150,10 +136,9 @@ h2 {
 .other-month {
   background-color: rgb(255, 210, 210);
 }
-
 .tablet {
   width: 140px;
-  height: 200vh;
+  height: 1200px;
   overflow-y: auto;
   overflow-x: hidden;
   transform: rotate(-90deg) translateY(-100px);
@@ -162,13 +147,10 @@ h2 {
 .tablet::-webkit-scrollbar {
   display: none;
 }
-.day {
-  font-size: 12px;
-}
 .date {
   font-size: 12px;
-  width: 100px;
-  height: 100px;
+  width: 90px;
+  height: 90px;
   transform: rotate(90deg);
   transform-origin: right top;
 }

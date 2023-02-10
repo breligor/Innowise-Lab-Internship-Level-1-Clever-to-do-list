@@ -4,7 +4,6 @@
       <div class="block is-flex is-justify-content-center">
         <h1 class="subtitle">create your todo</h1>
       </div>
-
       <div class="tabs">
         <ul class="is-justify-content-center">
           <li class="is-active"><a>Sign in</a></li>

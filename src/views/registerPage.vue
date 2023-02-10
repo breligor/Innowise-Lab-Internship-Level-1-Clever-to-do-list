@@ -4,7 +4,6 @@
       <div class="block is-flex is-justify-content-center">
         <h1 class="subtitle">create your todo</h1>
       </div>
-
       <div class="tabs">
         <ul class="is-justify-content-center">
           <li>
@@ -72,7 +71,6 @@
 
 <script setup>
 import { ref } from "vue";
-
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "vue-router";
 import baseInput from "@/components/baseInput.vue";
@@ -82,6 +80,7 @@ const password = ref("");
 const confirmPassword = ref("");
 const router = useRouter();
 const auth = getAuth();
+
 const register = () => {
   if (confirmPassword.value === password.value) {
     createUserWithEmailAndPassword(auth, email.value, password.value)
@@ -95,12 +94,13 @@ const register = () => {
         console.log(email.value);
       });
   } else {
-    alert("password should be the same");
+    alert("passwords should be the same");
   }
 };
 </script>
 
 <style lang="scss" scoped>
+@import "bulma/css/bulma.min.css";
 main {
   display: flex;
   justify-content: start;
@@ -110,36 +110,4 @@ main {
   width: 100%;
   padding-top: 50px;
 }
-
-// .input {
-//   margin-bottom: 10px;
-//   width: 200px;
-//   height: 30px;
-//   border: 0;
-//   border-bottom: 2px solid rgb(255, 251, 251);
-//   outline: 0;
-//   color: antiquewhite;
-//   padding: 7px 0;
-//   background: transparent;
-//   transition: border-color 0.2s;
-// }
-// h1 {
-//   color: antiquewhite;
-//   font-size: 15px;
-//   letter-spacing: 2px;
-// }
-// .btn {
-//   margin-bottom: 15px;
-//   margin-top: 10px;
-//   width: 80px;
-//   height: 30px;
-//   &:hover {
-//     cursor: pointer;
-//   }
-// }
-// .link {
-//   text-decoration: none;
-//   color: antiquewhite;
-//   font-size: 15px;
-// }
 </style>
