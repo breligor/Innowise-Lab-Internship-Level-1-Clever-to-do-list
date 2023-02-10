@@ -1,11 +1,13 @@
 <template>
-  <nav>
-    <!-- <router-link to="/">Home</router-link> | -->
-    <!-- <router-link to="/feed">Feed</router-link> |  -->
-    <!-- <router-link to="/register">Register</router-link>  -->
-    <!-- <router-link to="/sign-in">SignIn</router-link> -->
-    <button @click="handleSignOut" v-if="isLoggedIn">Sign out</button>
-  </nav>
+  <div class="btnWrapper">
+    <button
+      @click="handleSignOut"
+      v-if="isLoggedIn"
+      class="button is-danger is-hovered"
+    >
+      Get out
+    </button>
+  </div>
   <router-view />
 </template>
 
@@ -42,21 +44,19 @@ onMounted(() => {
 
 const handleSignOut = () => {
   signOut(auth).then(() => {
-    router.push("/sign-in");
-    console.log("Succesfully signed out");
+    router.push("/sign-in");    
   });
 };
 </script>
 
 <style lang="scss">
 #app {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
 }
-main {
-  width: 400px;
-  height: 400px;
+
+.btnWrapper {
+  padding: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
 }
 </style>
