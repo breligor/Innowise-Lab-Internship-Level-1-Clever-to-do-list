@@ -15,9 +15,14 @@
           class="date box ml-2 block is-flex is-flex-direction-column"
           :key="date"
           v-for="date in dates"
+
+          @click="dataShow"
+
+         
         >
           <h1>{{ days[date.getDay()] }}</h1>
           <h1 class="subtitle">{{ date.getDate() }}</h1>
+          
 
           <div class="">
             <span class="active">•</span>
@@ -60,6 +65,7 @@ export default {
         "Декабрь",
       ],
       isOtherMonth: "",
+      arr:[]
     };
   },
   computed: {
@@ -73,9 +79,13 @@ export default {
       let dates = [];
       for (let i = 0; i < 36; i++) {
         dates.push(new Date(this.year, this.month, start + i));
-      }
-      console.log(dates);
+      }      
+      
+      dates.forEach(element => {this.arr.push(new Date(element).toLocaleDateString())}); // делаем массив дат месяца в стороковом представлении      
+
+      console.log(this.arr)
       return dates;
+      
     },
   },
   methods: {
@@ -93,7 +103,18 @@ export default {
         this.year++;
       }
     },
-  },
+    show() {
+      console.log(this.$)
+      },
+      
+   dataShow () {
+    this.$emit('dataShow', {
+      data: this.arr,      
+    })
+  }
+    },
+ 
+  
 };
 </script>
 

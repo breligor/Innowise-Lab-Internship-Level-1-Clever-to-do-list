@@ -1,5 +1,5 @@
 <template>
-  <calendarComponent class="calendar"></calendarComponent>
+  <calendarComponent class="calendar" @dataShow="show"></calendarComponent>
   <main>
     <div class="wrapperTodo">
       <div class="btnWrapper">
@@ -113,6 +113,7 @@ const todosCollectionRef = collection(dbStore, `${userId}`);
 const todosCollectionQuery = query(todosCollectionRef, orderBy("date", "desc"));
 const makeDay = ref("");
 
+
 const addTodo = () => {
   addDoc(todosCollectionRef, {
     content: newTodoContent.value,
@@ -133,6 +134,7 @@ const addTodo = () => {
 onMounted(() => {
   onSnapshot(todosCollectionQuery, (querySnapshot) => {
     const fbTodos = [];
+    
     querySnapshot.forEach((doc) => {
       const todo = {
         id: doc.id,
@@ -141,13 +143,14 @@ onMounted(() => {
         userId: userId,
         mail: user.email,
         editing: false,
-        taskDate: doc.data().taskDate,
+        taskDate: new Date(doc.data().taskDate).toLocaleDateString(),        
       };
+    
       fbTodos.push(todo);
+      
     });
     todos.value = fbTodos;
-    console.log(fbTodos);
-    console.log(todos.value);
+    console.log(fbTodos);   
   });
 });
 
@@ -179,6 +182,12 @@ const doneEdit = (todo, id) => {
     content: todos.value[index].content,
   });
 };
+
+
+// связь с календарем
+const show = (data)=> {
+console.log(data)
+}
 </script>
 
 <style lang="scss" scoped>
