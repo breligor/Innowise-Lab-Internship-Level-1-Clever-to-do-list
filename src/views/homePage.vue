@@ -103,6 +103,7 @@ import {
   query,
   orderBy,
 } from "@firebase/firestore";
+import {isLoggedIn} from "@/App"
 
 const auth = getAuth();
 const user = auth.currentUser;
@@ -125,7 +126,7 @@ const addTodo = () => {
     taskDate: makeDay.value,
   });
   newTodoContent.value = "";
-  console.log(makeDay);
+  //console.log(makeDay);
   console.log(makeDay.value);
   makeDay.value = "";
 };

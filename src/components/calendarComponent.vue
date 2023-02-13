@@ -13,12 +13,10 @@
             'other-month': date.getMonth() !== month,
           }"
           class="date box ml-2 block is-flex is-flex-direction-column"
-          :key="date"
-          v-for="date in dates"
-
-          @click="dataShow"
-
-         
+          :key="date"                 
+          v-for="(date) in dates"
+          @click="this.id = date.toLocaleDateString(); dataShow()" 
+          
         >
           <h1>{{ days[date.getDay()] }}</h1>
           <h1 class="subtitle">{{ date.getDate() }}</h1>
@@ -65,7 +63,9 @@ export default {
         "Декабрь",
       ],
       isOtherMonth: "",
-      arr:[]
+      arr:[],
+      id:''
+      
     };
   },
   computed: {
@@ -82,8 +82,9 @@ export default {
       }      
       
       dates.forEach(element => {this.arr.push(new Date(element).toLocaleDateString())}); // делаем массив дат месяца в стороковом представлении      
-
+      console.log(dates)
       console.log(this.arr)
+      
       return dates;
       
     },
@@ -102,15 +103,10 @@ export default {
         this.month = 0;
         this.year++;
       }
-    },
-    show() {
-      console.log(this.$)
-      },
+    },   
       
    dataShow () {
-    this.$emit('dataShow', {
-      data: this.arr,      
-    })
+    this.$emit('dataShow',this.id) //передаем дату дня в  род.компонент для фильтрации тасок по дням 
   }
     },
  
