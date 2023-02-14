@@ -9,22 +9,22 @@
       <div class="tablet">
         <div
           :class="{
-            current: date.getDate() === nowDate,
-            'other-month': date.getMonth() !== month,
+            current: date.date.getDate() === nowDate,
+            'other-month': date.date.getMonth() !== month,
           }"
           class="date box ml-2 block is-flex is-flex-direction-column"
-          :key="date"
+          :key="date.date"
           v-for="date in dates"
           @click="
-            this.id = date.toLocaleDateString();
+            this.id = date.date.toLocaleDateString();
             getDate();
           "
         >
-          <h1>{{ days[date.getDay()] }}</h1>
-          <h1 class="subtitle">{{ date.getDate() }}</h1>
+          <h1>{{ days[date.date.getDay()] }}</h1>
+          <h1 class="subtitle">{{ date.date.getDate() }}</h1>
 
           <div class="dotWrapper">
-            <span v-if="hasActiveTask">•</span>
+            <span v-if="date.active">•</span>
             <!-- <span class="done">•</span> -->
           </div>
         </div>
@@ -79,22 +79,27 @@ export default {
       let start = 1 - day;
       let dates = [];
       for (let i = 0; i < 36; i++) {
-        dates.push(new Date(this.year, this.month, start + i));
+        dates.push({
+          date:new Date(this.year, this.month, start + i),
+          active:this.hasActiveTask,
+          id:(new Date(this.year, this.month, start + i)).toLocaleDateString()});
       }
+  console.log(dates);
+      // dates.forEach((element) => {
+      //   this.arr.push(new Date(element).toLocaleDateString());
+      // }); // делаем массив дат месяца в строковом представлении
 
-      dates.forEach((element) => {
-        this.arr.push(new Date(element).toLocaleDateString());
-      }); // делаем массив дат месяца в строковом представлении
-
-      //console.log(dates)
-      // console.log(this.arr);
-      // console.log(this.todos.map(it => it.taskDate));    
+      // console.log(Array.from(this.arr))
+      // // console.log(this.arr);
+      // // console.log(this.todos.map(it => it.taskDate));    
 
       return dates;
     },
     hasActiveTask(){
-      let intersection = (Array.from(this.arr).filter(it => (this.todos.map(it => it.taskDate)).includes(it))).length
-      return intersection > 0       
+      // let intersection = (Array.from(this.arr).filter(it => (this.todos.map(it => it.taskDate)).includes(it)))
+      // console.log(intersection)
+      // return intersection.length > 0       
+      return true
     }
 
   },
