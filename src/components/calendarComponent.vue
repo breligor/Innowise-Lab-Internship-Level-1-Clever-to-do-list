@@ -13,18 +13,19 @@
             'other-month': date.getMonth() !== month,
           }"
           class="date box ml-2 block is-flex is-flex-direction-column"
-          :key="date"                 
-          v-for="(date) in dates"
-          @click="this.id = date.toLocaleDateString(); getDate()" 
-          
+          :key="date"
+          v-for="date in dates"
+          @click="
+            this.id = date.toLocaleDateString();
+            getDate();
+          "
         >
           <h1>{{ days[date.getDay()] }}</h1>
           <h1 class="subtitle">{{ date.getDate() }}</h1>
-          
 
-          <div class="">
-            <span class="active">•</span>
-            <span class="done">•</span>
+          <div class="dotWrapper">
+            <span v-if="hasActiveTask">•</span>
+            <!-- <span class="done">•</span> -->
           </div>
         </div>
       </div>
@@ -34,6 +35,7 @@
 
 <script>
 export default {
+  props: ['todos'],
   data() {
     return {
       days: [
@@ -63,9 +65,8 @@ export default {
         "Декабрь",
       ],
       isOtherMonth: "",
-      arr:[],
-      id:''
-      
+      arr: [],
+      id: "",
     };
   },
   computed: {
@@ -79,16 +80,23 @@ export default {
       let dates = [];
       for (let i = 0; i < 36; i++) {
         dates.push(new Date(this.year, this.month, start + i));
-      }      
-      
-      dates.forEach(element => {this.arr.push(new Date(element).toLocaleDateString())}); // делаем массив дат месяца в стороковом представлении      
-      
+      }
+
+      dates.forEach((element) => {
+        this.arr.push(new Date(element).toLocaleDateString());
+      }); // делаем массив дат месяца в строковом представлении
+
       //console.log(dates)
-      console.log(this.arr)
-      
+      // console.log(this.arr);
+      // console.log(this.todos.map(it => it.taskDate));    
+
       return dates;
-      
     },
+    hasActiveTask(){
+      let intersection = (Array.from(this.arr).filter(it => (this.todos.map(it => it.taskDate)).includes(it))).length
+      return intersection > 0       
+    }
+
   },
   methods: {
     monthAgo() {
@@ -104,15 +112,14 @@ export default {
         this.month = 0;
         this.year++;
       }
-    },   
-      
-    getDate () {
-    this.$emit('getDate',this.id) 
-    //передаем дату дня в  род.компонент для фильтрации тасок по дням 
-  }
     },
- 
-  
+
+    getDate() {
+      this.$emit("getDate", this.id);
+      //передаем дату дня в  род.компонент для фильтрации тасок по дням
+    },
+    
+  },
 };
 </script>
 

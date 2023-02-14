@@ -2,6 +2,7 @@
   <calendarComponent
     class="calendar"
     @getDate="filteredByDateTasks"
+    :todos="todos"
   ></calendarComponent>
   <main>
     <div class="wrapperTodo">
@@ -164,7 +165,8 @@ onMounted(() => {
     });
     todos.value = fbTodos;
     todosForRender.value = fbTodos;
-    console.log(fbTodos);
+    //console.log(fbTodos);
+    //console.log(todos);
     
   });
 });
