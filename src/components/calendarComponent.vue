@@ -15,7 +15,7 @@
           class="date box ml-2 block is-flex is-flex-direction-column"
           :key="date"                 
           v-for="(date) in dates"
-          @click="this.id = date.toLocaleDateString(); dataShow()" 
+          @click="this.id = date.toLocaleDateString(); getDate()" 
           
         >
           <h1>{{ days[date.getDay()] }}</h1>
@@ -82,7 +82,8 @@ export default {
       }      
       
       dates.forEach(element => {this.arr.push(new Date(element).toLocaleDateString())}); // делаем массив дат месяца в стороковом представлении      
-      console.log(dates)
+      
+      //console.log(dates)
       console.log(this.arr)
       
       return dates;
@@ -105,8 +106,9 @@ export default {
       }
     },   
       
-   dataShow () {
-    this.$emit('dataShow',this.id) //передаем дату дня в  род.компонент для фильтрации тасок по дням 
+    getDate () {
+    this.$emit('getDate',this.id) 
+    //передаем дату дня в  род.компонент для фильтрации тасок по дням 
   }
     },
  

@@ -1,5 +1,8 @@
 <template>
-  <calendarComponent class="calendar" @dataShow="show"></calendarComponent>
+  <calendarComponent
+    class="calendar"
+    @getDate="filteredByDateTasks"
+  ></calendarComponent>
   <main>
     <div class="wrapperTodo">
       <div class="btnWrapper">
@@ -18,7 +21,7 @@
             />
           </p>
           <p class="control">
-            <input class="input" type="date" v-model="makeDay" />
+            <input class="input" type="date" v-model="makeDay" required />
           </p>
           <p class="control">
             <button :disabled="!newTodoContent" class="button is-info">
@@ -27,12 +30,22 @@
           </p>
         </div>
       </form>
+      <div class="todoInfo block is-flex is-justify-content-space-between">
+        <div class="todoQuantity block">
+          {{ "Количество заданий: " + todosForRender.length }}
+        </div>
+        <div class="btnShowAllTasksWrapper">
+          <button @click="showAllTasks" class="button is-info ml-2">
+            show all
+          </button>
+        </div>
+      </div>
       <div class="todo-item-wrapper-scroll">
         <div class="todo-item-wrapper">
           <div
             :class="{ 'has-background-success-light': todo.done }"
             class="card mb-5"
-            v-for="todo in todos"
+            v-for="todo in todosForRender"
             :key="todo.id"
           >
             <div class="card-content">
@@ -103,17 +116,17 @@ import {
   query,
   orderBy,
 } from "@firebase/firestore";
-import {isLoggedIn} from "@/App"
+import { isLoggedIn } from "@/App";
 
 const auth = getAuth();
 const user = auth.currentUser;
 const userId = user.uid;
 const todos = ref([]);
+const todosForRender = ref([]);
 const newTodoContent = ref("");
 const todosCollectionRef = collection(dbStore, `${userId}`);
 const todosCollectionQuery = query(todosCollectionRef, orderBy("date", "desc"));
 const makeDay = ref("");
-
 
 const addTodo = () => {
   addDoc(todosCollectionRef, {
@@ -135,7 +148,7 @@ const addTodo = () => {
 onMounted(() => {
   onSnapshot(todosCollectionQuery, (querySnapshot) => {
     const fbTodos = [];
-    
+
     querySnapshot.forEach((doc) => {
       const todo = {
         id: doc.id,
@@ -144,27 +157,26 @@ onMounted(() => {
         userId: userId,
         mail: user.email,
         editing: false,
-        taskDate: new Date(doc.data().taskDate).toLocaleDateString(),        
+        taskDate: new Date(doc.data().taskDate).toLocaleDateString(),
       };
-    
+
       fbTodos.push(todo);
-      
     });
     todos.value = fbTodos;
-    console.log(fbTodos);   
+    todosForRender.value = fbTodos;
+    console.log(fbTodos);
+    
   });
 });
 
 //del btn
 const deleteTodo = (id) => {
-  deleteDoc(doc(todosCollectionRef, id));
-  //todos.value = todos.value.filter((todo) => todo.id !== id);
+  deleteDoc(doc(todosCollectionRef, id));  
 };
 
 //update
 const toggleDone = (id) => {
-  const index = todos.value.findIndex((todo) => todo.id === id);
-  //todos.value[index].done = !todos.value[index].done;
+  const index = todos.value.findIndex((todo) => todo.id === id); 
 
   updateDoc(doc(todosCollectionRef, id), {
     done: !todos.value[index].done,
@@ -184,11 +196,15 @@ const doneEdit = (todo, id) => {
   });
 };
 
+// получаем дату дня из компонента Calendar для фильтрации тасок по дню и фильтруем массив по которому рендерим
+const filteredByDateTasks = (chosenDate) => {
+  todosForRender.value = todos.value.filter((it) => it.taskDate === chosenDate);
+};
 
-// связь с календарем
-const show = (data)=> {
-console.log(data)
-}
+// показать все таски пользователя за все дни
+const showAllTasks = () => {
+  todosForRender.value = todos.value;
+};
 </script>
 
 <style lang="scss" scoped>
@@ -232,7 +248,7 @@ main {
   overflow-y: auto;
   max-height: 600px;
 }
-.calendar{
+.calendar {
   height: 200px;
 }
 </style>
