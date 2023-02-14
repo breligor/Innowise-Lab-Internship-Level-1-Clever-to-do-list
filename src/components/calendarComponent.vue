@@ -6,26 +6,37 @@
       <button class="button is-rounded" @click="monthAHead">next</button>
     </div>
     <div>
-      <div class="tablet">
+      <div class="tablet pl-4">
         <div
           :class="{
             current: date.date.getDate() === nowDate,
             'other-month': date.date.getMonth() !== month,
           }"
-          class="date box ml-2 block is-flex is-flex-direction-column"
-          :key="date.date"
+          class="date box"
+          :key="date.date.toLocaleDateString()"
           v-for="date in dates"
           @click="
             this.id = date.date.toLocaleDateString();
             getDate();
           "
         >
-          <h1>{{ days[date.date.getDay()] }}</h1>
-          <h1 class="subtitle">{{ date.date.getDate() }}</h1>
-
-          <div class="dotWrapper">
-            <span v-if="date.active">•</span>
-            <!-- <span class="done">•</span> -->
+          <div>
+            <h1>{{ days[date.date.getDay()] }}</h1>
+          </div>
+          <div>
+            <h1 class="subtitle">{{ date.date.getDate() }}</h1>
+          </div>
+          <div>
+            <span
+              v-show="hasActiveTask(date.id)"
+              class="is-size-4 has-text-danger"
+              >•</span
+            >
+            <span
+              v-show="hasDoneTask(date.id)"
+              class="is-size-4 has-text-success"
+              >•</span
+            >
           </div>
         </div>
       </div>
@@ -35,7 +46,7 @@
 
 <script>
 export default {
-  props: ['todos'],
+  props: ["todos"],
   data() {
     return {
       days: [
@@ -80,28 +91,12 @@ export default {
       let dates = [];
       for (let i = 0; i < 36; i++) {
         dates.push({
-          date:new Date(this.year, this.month, start + i),
-          active:this.hasActiveTask,
-          id:(new Date(this.year, this.month, start + i)).toLocaleDateString()});
+          date: new Date(this.year, this.month, start + i),          
+          id: new Date(this.year, this.month, start + i).toLocaleDateString(),
+        });
       }
-  console.log(dates);
-      // dates.forEach((element) => {
-      //   this.arr.push(new Date(element).toLocaleDateString());
-      // }); // делаем массив дат месяца в строковом представлении
-
-      // console.log(Array.from(this.arr))
-      // // console.log(this.arr);
-      // // console.log(this.todos.map(it => it.taskDate));    
-
       return dates;
     },
-    hasActiveTask(){
-      // let intersection = (Array.from(this.arr).filter(it => (this.todos.map(it => it.taskDate)).includes(it)))
-      // console.log(intersection)
-      // return intersection.length > 0       
-      return true
-    }
-
   },
   methods: {
     monthAgo() {
@@ -118,12 +113,26 @@ export default {
         this.year++;
       }
     },
-
+    //передаем дату дня в  род.компонент для фильтрации тасок по дням
     getDate() {
       this.$emit("getDate", this.id);
-      //передаем дату дня в  род.компонент для фильтрации тасок по дням
     },
-    
+
+    //определяем, содержится ли конкретный день календаря в массиве существующих тасок
+    //для определения дней, отмечаемых точкой
+    hasActiveTask(id) {
+      return this.todos.map((it) => it.taskDate).includes(id);
+    },
+
+    // определяем наличие сделанных тасок
+    hasDoneTask(id) {
+      const temp = this.todos
+        .filter((it) => it.taskDate === id)
+        .map((it) => it.done);
+      if (temp.length === 1) {
+        return temp[0];
+      } else return temp.includes(true) ? true : false;
+    },
   },
 };
 </script>
@@ -147,9 +156,10 @@ export default {
   color: rgb(10, 0, 0);
   font-size: 20px;
   font-weight: 600;
-  display: flex;
-  align-items: center;
   justify-content: center;
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .day {
