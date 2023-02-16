@@ -5,23 +5,38 @@
       <h1 class="subtitle">{{ monthList[month] }} {{ year }}</h1>
       <button class="button is-rounded" @click="monthAHead">next</button>
     </div>
-    <div>
-      <div class="tablet">
+    <div class="calendarItemsWrapper">
+      <div class="tablet pl-4">
         <div
           :class="{
-            current: date.getDate() === nowDate,
-            'other-month': date.getMonth() !== month,
+            current: date.date.getDate() === nowDate,
+            'other-month': date.date.getMonth() !== month,
           }"
-          class="date box ml-2 block is-flex is-flex-direction-column"
-          :key="date"
+          class="date box"
+          :key="date.date.toLocaleDateString()"
           v-for="date in dates"
+          @click="
+            this.id = date.date.toLocaleDateString();
+            getDate();
+          "
         >
-          <h1>{{ days[date.getDay()] }}</h1>
-          <h1 class="subtitle">{{ date.getDate() }}</h1>
-
-          <div class="">
-            <span class="active">•</span>
-            <span class="done">•</span>
+          <div>
+            <h1>{{ days[date.date.getDay()] }}</h1>
+          </div>
+          <div>
+            <h1 class="subtitle">{{ date.date.getDate() }}</h1>
+          </div>
+          <div>
+            <span
+              v-show="hasActiveTask(date.id)"
+              class="is-size-4 has-text-danger"
+              >•</span
+            >
+            <span
+              v-show="hasDoneTask(date.id)"
+              class="is-size-4 has-text-success"
+              >•</span
+            >
           </div>
         </div>
       </div>
@@ -31,6 +46,7 @@
 
 <script>
 export default {
+  props: ["todos"],
   data() {
     return {
       days: [
@@ -60,6 +76,8 @@ export default {
         "Декабрь",
       ],
       isOtherMonth: "",
+      arr: [],
+      id: "",
     };
   },
   computed: {
@@ -72,9 +90,11 @@ export default {
       let start = 1 - day;
       let dates = [];
       for (let i = 0; i < 36; i++) {
-        dates.push(new Date(this.year, this.month, start + i));
+        dates.push({
+          date: new Date(this.year, this.month, start + i),
+          id: new Date(this.year, this.month, start + i).toLocaleDateString(),
+        });
       }
-      console.log(dates);
       return dates;
     },
   },
@@ -92,6 +112,24 @@ export default {
         this.month = 0;
         this.year++;
       }
+    },
+    //передаем дату дня в  род.компонент для фильтрации тасок по дням
+    getDate() {
+      this.$emit("getDate", this.id);
+    },
+
+    //определяем, содержится ли конкретный день календаря в массиве существующих тасок
+    //для определения дней, отмечаемых точкой
+    hasActiveTask(id) {
+      return this.todos.map((it) => it.taskDate).includes(id);
+    },
+
+    // определяем наличие сделанных тасок
+    hasDoneTask(id) {
+      const temp = this.todos
+        .filter((it) => it.taskDate === id)
+        .map((it) => it.done);
+      return temp.includes(true) ? true : false;
     },
   },
 };
@@ -116,9 +154,10 @@ export default {
   color: rgb(10, 0, 0);
   font-size: 20px;
   font-weight: 600;
-  display: flex;
-  align-items: center;
   justify-content: center;
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .day {
@@ -138,7 +177,7 @@ export default {
 }
 .tablet {
   width: 140px;
-  height: 1200px;
+  height: 1300px;
   overflow-y: auto;
   overflow-x: hidden;
   transform: rotate(-90deg) translateY(-100px);
@@ -153,5 +192,9 @@ export default {
   height: 90px;
   transform: rotate(90deg);
   transform-origin: right top;
+}
+.calendarItemsWrapper {
+  width: 100%;
+  max-width: 100vw;
 }
 </style>
