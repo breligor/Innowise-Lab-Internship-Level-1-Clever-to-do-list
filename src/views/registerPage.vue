@@ -75,6 +75,7 @@ import { auth } from "@/firebaseApp";
 import { useRouter } from "vue-router";
 import baseInput from "@/components/baseInput.vue";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { showToastSuccess, showToastError } from "@/toastFunctions";
 
 const email = ref("");
 const password = ref("");
@@ -85,16 +86,14 @@ const register = () => {
   if (confirmPassword.value === password.value) {
     createUserWithEmailAndPassword(auth, email.value, password.value)
       .then(() => {
-        console.log("Succesfully registered");
+        showToastSuccess("Succesfully registered");
         router.push("/");
       })
       .catch((error) => {
-        //console.log(error.code);
-        alert(error.message);
-        console.log(email.value);
+        showToastError(error.message);
       });
   } else {
-    alert("passwords should be the same");
+    showToastError("passwords should be the same");
   }
 };
 </script>
