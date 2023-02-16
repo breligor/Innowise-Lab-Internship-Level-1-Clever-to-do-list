@@ -41,7 +41,7 @@
           </span>
         </p>
         <div class="block is-flex is-justify-content-center">
-          <p class="subtitle" v-if="errMsg">{{ errMsg }}</p>
+          <!-- <p class="subtitle" v-if="errMsg">{{ errMsg }}</p> -->
         </div>
       </div>
       <div class="field">
@@ -59,6 +59,7 @@ import { auth } from "@/firebaseApp";
 import { useRouter } from "vue-router";
 import baseInput from "@/components/baseInput.vue";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import {showToastSuccess, showToastError } from "@/toastFunctions"
 
 const email = ref("");
 const password = ref("");
@@ -66,25 +67,30 @@ const errMsg = ref("");
 const router = useRouter();
 
 
+
 const signIn = () => {
   signInWithEmailAndPassword(auth, email.value, password.value)
     .then(() => {
-      console.log("Succesfully signed in");
+      showToastSuccess('Succesfully signed in');      
       router.push("/");
     })
     .catch((error) => {
       switch (error.code) {
         case "auth/invalid-email":
           errMsg.value = "invalid email";
+          showToastError(errMsg.value);
           break;
         case "auth/user-not-found":
           errMsg.value = "No created account was found";
+          showToastError(errMsg.value);
           break;
         case "auth/wrong-password":
           errMsg.value = "Enter correct password";
+          showToastError(errMsg.value);
           break;
         default:
           errMsg.value = "Email or password are incorrect";
+          showToastError(errMsg.value);
           break;
       }
     });
@@ -101,5 +107,16 @@ main {
   height: 100vh;
   width: 100%;
   padding-top: 50px;
+}
+.toast-enter-from {
+  opacity: 0;
+  transform: translateY(-50px);
+}
+.toast-enter-to {
+  opacity: 1;
+  transform: translateY();
+}
+.toast-enter-active {
+  transition: all 0.5s ease;
 }
 </style>

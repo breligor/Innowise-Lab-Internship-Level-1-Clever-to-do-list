@@ -16,6 +16,7 @@ import { onMounted, onBeforeMount, ref } from "vue";
 import { useRouter } from "vue-router";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "@/firebaseApp";
+import { showToastSuccess } from "@/toastFunctions"
 
 const router = useRouter();
 const isLoggedIn = ref(false);
@@ -42,6 +43,7 @@ onMounted(() => {
 
 const handleSignOut = () => {
   signOut(auth).then(() => {
+    showToastSuccess("By-By!")
     router.push("/sign-in");
   });
 };
