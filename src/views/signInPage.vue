@@ -1,6 +1,10 @@
 <template>
   <main>
-    <toastNotification>oops</toastNotification>
+    <transition name="toast"> 
+      <toastNotification v-if="errMsg" @click="closeToast">
+        <p class="subtitle">{{ errMsg }}</p>
+      </toastNotification>
+    </transition>
     <div class="box">
       <div class="block is-flex is-justify-content-center">
         <h1 class="subtitle">create your todo</h1>
@@ -42,7 +46,7 @@
           </span>
         </p>
         <div class="block is-flex is-justify-content-center">
-          <p class="subtitle" v-if="errMsg">{{ errMsg }}</p>
+          <!-- <p class="subtitle" v-if="errMsg">{{ errMsg }}</p> -->
         </div>
       </div>
       <div class="field">
@@ -52,7 +56,6 @@
       </div>
     </div>
   </main>
-
 </template>
 
 <script setup>
@@ -92,6 +95,11 @@ const signIn = () => {
       }
     });
 };
+
+const closeToast = () => {    
+  errMsg.value = false;
+ }
+
 </script>
 
 <style lang="scss" scoped>
@@ -105,4 +113,16 @@ main {
   width: 100%;
   padding-top: 50px;
 }
+.toast-enter-from {
+  opacity:0;
+  transform: translateY(-50px);
+}
+.toast-enter-to {
+  opacity:1;
+  transform: translateY();
+}
+.toast-enter-active {
+  transition: all 0.5s ease
+}
+
 </style>
