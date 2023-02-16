@@ -55,18 +55,18 @@
 
 <script setup>
 import { ref } from "vue";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/firebaseApp";
 import { useRouter } from "vue-router";
 import baseInput from "@/components/baseInput.vue";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 const email = ref("");
 const password = ref("");
-const router = useRouter();
 const errMsg = ref("");
+const router = useRouter();
+
 
 const signIn = () => {
-  const auth = getAuth();
-
   signInWithEmailAndPassword(auth, email.value, password.value)
     .then(() => {
       console.log("Succesfully signed in");

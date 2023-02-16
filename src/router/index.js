@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getCurrentUser } from "@/firebaseApp"
 
 const router = createRouter({
   history: createWebHistory(),
@@ -16,19 +16,6 @@ const router = createRouter({
     
   ],
 });
-
-const getCurrentUser = () => {
-  return new Promise((res, rej) => {
-    const removeListener = onAuthStateChanged(
-      getAuth(),
-      (user) => {
-        removeListener();
-        res(user);
-      },
-      rej
-    );
-  });
-};
 
 //guard to prevent transition to feed page without auth
 router.beforeEach(async (to, from, next) => {
