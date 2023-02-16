@@ -1,5 +1,6 @@
 <template>
   <main>
+    <toastNotification>oops</toastNotification>
     <div class="box">
       <div class="block is-flex is-justify-content-center">
         <h1 class="subtitle">create your todo</h1>
@@ -51,6 +52,7 @@
       </div>
     </div>
   </main>
+
 </template>
 
 <script setup>
@@ -59,6 +61,7 @@ import { auth } from "@/firebaseApp";
 import { useRouter } from "vue-router";
 import baseInput from "@/components/baseInput.vue";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import toastNotification from "@/components/toastNotification.vue";
 
 const email = ref("");
 const password = ref("");
