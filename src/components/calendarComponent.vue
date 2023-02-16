@@ -5,7 +5,7 @@
       <h1 class="subtitle">{{ monthList[month] }} {{ year }}</h1>
       <button class="button is-rounded" @click="monthAHead">next</button>
     </div>
-    <div>
+    <div class="calendarItemsWrapper">
       <div class="tablet pl-4">
         <div
           :class="{
@@ -91,7 +91,7 @@ export default {
       let dates = [];
       for (let i = 0; i < 36; i++) {
         dates.push({
-          date: new Date(this.year, this.month, start + i),          
+          date: new Date(this.year, this.month, start + i),
           id: new Date(this.year, this.month, start + i).toLocaleDateString(),
         });
       }
@@ -129,9 +129,7 @@ export default {
       const temp = this.todos
         .filter((it) => it.taskDate === id)
         .map((it) => it.done);
-      if (temp.length === 1) {
-        return temp[0];
-      } else return temp.includes(true) ? true : false;
+      return temp.includes(true) ? true : false;
     },
   },
 };
@@ -179,7 +177,7 @@ export default {
 }
 .tablet {
   width: 140px;
-  height: 1200px;
+  height: 1300px;
   overflow-y: auto;
   overflow-x: hidden;
   transform: rotate(-90deg) translateY(-100px);
@@ -194,5 +192,9 @@ export default {
   height: 90px;
   transform: rotate(90deg);
   transform-origin: right top;
+}
+.calendarItemsWrapper {
+  width: 100%;
+  max-width: 100vw;
 }
 </style>

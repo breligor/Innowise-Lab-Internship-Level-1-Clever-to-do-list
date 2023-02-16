@@ -4,7 +4,7 @@
     @getDate="filteredByDateTasks"
     :todos="todos"
   ></calendarComponent>
-  <main>
+  <main>    
     <div class="wrapperTodo">
       <div class="btnWrapper">
         <button @click="handleSignOut" v-if="isLoggedIn">Sign out</button>
