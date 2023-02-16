@@ -105,7 +105,7 @@
 <script setup>
 import calendarComponent from "@/components/calendarComponent.vue";
 import { ref, onMounted } from "vue";
-import { dbStore } from "@/main";
+import { dbStore } from "@/firebaseApp";
 import { getAuth } from "firebase/auth";
 import {
   doc,

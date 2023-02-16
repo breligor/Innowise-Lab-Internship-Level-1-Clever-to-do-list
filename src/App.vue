@@ -50,8 +50,6 @@ const handleSignOut = () => {
 </script>
 
 <style lang="scss">
-#app {
-}
 
 .btnWrapper {
   padding: 10px;
