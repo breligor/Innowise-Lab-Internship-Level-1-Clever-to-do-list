@@ -71,15 +71,15 @@
 
 <script setup>
 import { ref } from "vue";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/firebaseApp";
 import { useRouter } from "vue-router";
 import baseInput from "@/components/baseInput.vue";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");
 const router = useRouter();
-const auth = getAuth();
 
 const register = () => {
   if (confirmPassword.value === password.value) {

@@ -14,14 +14,13 @@
 <script setup>
 import { onMounted, onBeforeMount, ref } from "vue";
 import { useRouter } from "vue-router";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth } from "@/firebaseApp";
 
 const router = useRouter();
 const isLoggedIn = ref(false);
-let auth;
 
 onBeforeMount(() => {
-  auth = getAuth();
   onAuthStateChanged(auth, (user) => {
     if (!user) {
       router.replace("/sign-in");
@@ -32,7 +31,6 @@ onBeforeMount(() => {
 });
 
 onMounted(() => {
-  auth = getAuth();
   onAuthStateChanged(auth, (user) => {
     if (user) {
       isLoggedIn.value = true;
@@ -44,15 +42,12 @@ onMounted(() => {
 
 const handleSignOut = () => {
   signOut(auth).then(() => {
-    router.push("/sign-in");    
+    router.push("/sign-in");
   });
 };
 </script>
 
-<style lang="scss">
-#app {
-}
-
+<style lang="scss" scoped>
 .btnWrapper {
   padding: 10px;
   width: 100%;

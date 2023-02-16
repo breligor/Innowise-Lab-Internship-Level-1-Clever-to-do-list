@@ -105,8 +105,8 @@
 <script setup>
 import calendarComponent from "@/components/calendarComponent.vue";
 import { ref, onMounted } from "vue";
-import { dbStore } from "@/main";
-import { getAuth } from "firebase/auth";
+import { dbStore } from "@/firebaseApp";
+import { auth } from "@/firebaseApp";
 import {
   doc,
   collection,
@@ -119,7 +119,6 @@ import {
 } from "@firebase/firestore";
 import { isLoggedIn } from "@/App";
 
-const auth = getAuth();
 const user = auth.currentUser;
 const userId = user.uid;
 const todos = ref([]);
@@ -139,8 +138,7 @@ const addTodo = () => {
     editing: false,
     taskDate: makeDay.value,
   });
-  newTodoContent.value = "";
-  //console.log(makeDay);
+  newTodoContent.value = ""; 
   console.log(makeDay.value);
   makeDay.value = "";
 };
@@ -164,10 +162,7 @@ onMounted(() => {
       fbTodos.push(todo);
     });
     todos.value = fbTodos;
-    todosForRender.value = fbTodos;
-    //console.log(fbTodos);
-    //console.log(todos);
-    
+    todosForRender.value = fbTodos;     
   });
 });
 
