@@ -4,6 +4,7 @@
       @click="handleSignOut"
       v-if="isLoggedIn"
       class="button is-danger is-hovered"
+      title="would you like to get out?"
     >
       Get out
     </button>

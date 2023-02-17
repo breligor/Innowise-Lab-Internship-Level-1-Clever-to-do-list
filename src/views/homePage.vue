@@ -1,16 +1,12 @@
 <template>
   <calendarComponent
     class="calendar"
-    @getDate="filteredByDateTasks"
+    @getDate="filteredTasksByDate"
     :todos="todos"
   ></calendarComponent>
-  <main>    
+  <main>
     <div class="wrapperTodo">
-      <div class="btnWrapper">
-        <button @click="handleSignOut" v-if="isLoggedIn">Sign out</button>
-      </div>
       <div class="title has-text-centered">WHAT's TODO</div>
-
       <form @submit.prevent="addTodo">
         <div class="field is-grouped mb-5">
           <p class="control is-expanded">
@@ -25,9 +21,7 @@
             <input class="input" type="date" v-model="makeDay" required />
           </p>
           <p class="control">
-            <button :disabled="!newTodoContent" class="button is-info">
-              Add
-            </button>
+            <button :disabled="!newTodoContent" class="button is-info">Add</button>
           </p>
         </div>
       </form>
@@ -35,14 +29,12 @@
         <div class="todoQuantity block">
           {{ "Количество заданий: " + todosForRender.length }}
         </div>
-        <div class="btnShowAllTasksWrapper">
-          <button @click="showAllTasks" class="button is-info ml-2">
-            show all
-          </button>
+        <div>
+          <button @click="showAllTasks" class="button is-info ml-2">show all</button>
         </div>
       </div>
       <div class="todo-item-wrapper-scroll">
-        <div class="todo-item-wrapper">
+        <div>
           <div
             :class="{ 'has-background-success-light': todo.done }"
             class="card mb-5"
@@ -71,7 +63,6 @@
                       @keyup.enter="doneEdit(todo, todo.id)"
                     />
                   </div>
-
                   <div
                     class="is-flex is-justify-content-space-between is-align-items-center"
                   >
@@ -85,10 +76,7 @@
                     >
                       &check;
                     </button>
-                    <button
-                      @click="deleteTodo(todo.id)"
-                      class="button is-danger ml-2"
-                    >
+                    <button @click="deleteTodo(todo.id)" class="button is-danger ml-2">
                       &cross;
                     </button>
                   </div>
@@ -117,12 +105,11 @@ import {
   query,
   orderBy,
 } from "@firebase/firestore";
-import { isLoggedIn } from "@/App";
 
 const user = auth.currentUser;
 const userId = user.uid;
 const todos = ref([]);
-const todosForRender = ref([]);
+const todosForRender = ref([]); //array to filter
 const newTodoContent = ref("");
 const todosCollectionRef = collection(dbStore, `${userId}`);
 const todosCollectionQuery = query(todosCollectionRef, orderBy("date", "desc"));
@@ -138,8 +125,7 @@ const addTodo = () => {
     editing: false,
     taskDate: makeDay.value,
   });
-  newTodoContent.value = ""; 
-  console.log(makeDay.value);
+  newTodoContent.value = "";
   makeDay.value = "";
 };
 
@@ -158,25 +144,25 @@ onMounted(() => {
         editing: false,
         taskDate: new Date(doc.data().taskDate).toLocaleDateString(),
       };
-
       fbTodos.push(todo);
     });
+
     todos.value = fbTodos;
-    todosForRender.value = fbTodos;     
+    todosForRender.value = fbTodos;
   });
 });
 
 //del btn
 const deleteTodo = (id) => {
-  deleteDoc(doc(todosCollectionRef, id));  
+  deleteDoc(doc(todosCollectionRef, id));
 };
 
 //update
 const toggleDone = (id) => {
-  const index = todos.value.findIndex((todo) => todo.id === id); 
+  const index = todosForRender.value.findIndex((todo) => todo.id === id);
 
   updateDoc(doc(todosCollectionRef, id), {
-    done: !todos.value[index].done,
+    done: !todosForRender.value[index].done,
   });
 };
 
@@ -187,14 +173,14 @@ const editTodo = (todo) => {
 
 const doneEdit = (todo, id) => {
   todo.editing = false;
-  const index = todos.value.findIndex((todo) => todo.id === id);
+  const index = todosForRender.value.findIndex((todo) => todo.id === id);
   updateDoc(doc(todosCollectionRef, id), {
-    content: todos.value[index].content,
+    content: todosForRender.value[index].content,
   });
 };
 
 // получаем дату дня из компонента Calendar для фильтрации тасок по дню и фильтруем массив по которому рендерим
-const filteredByDateTasks = (chosenDate) => {
+const filteredTasksByDate = (chosenDate) => {
   todosForRender.value = todos.value.filter((it) => it.taskDate === chosenDate);
 };
 
