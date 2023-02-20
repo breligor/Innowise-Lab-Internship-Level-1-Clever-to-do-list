@@ -7,7 +7,7 @@
   <main>
     <div class="wrapperTodo">
       <div class="title has-text-centered">WHAT's TODO</div>
-      <form @submit.prevent="addTodo">
+      <form @submit.prevent="addTodo()">
         <div class="field is-grouped mb-5">
           <p class="control is-expanded">
             <input
@@ -30,7 +30,7 @@
           {{ "Количество заданий: " + todosForRender.length }}
         </div>
         <div>
-          <button @click="showAllTasks" class="button is-info ml-2">show all</button>
+          <button @click="showAllTasks()" class="button is-info ml-2">show all</button>
         </div>
       </div>
       <div class="todo-item-wrapper-scroll">
@@ -46,7 +46,7 @@
                 <div class="is-flex is-justify-content-space-between">
                   <div class="todo-content">
                     <div
-                      v-if="!todo.editing"
+                      v-if="!todo.editing"                      
                       @dblclick="editTodo(todo)"
                       class="column"
                       :class="{ 'has-text-success line-through': todo.done }"
@@ -105,7 +105,7 @@ import {
   orderBy,
 } from "@firebase/firestore";
 
-const { auth,dbStore } = useFirebaseApi();
+const { auth, dbStore } = useFirebaseApi();
 const user = auth.currentUser;
 const userId = user.uid;
 const todos = ref([]);

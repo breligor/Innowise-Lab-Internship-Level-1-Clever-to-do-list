@@ -19,13 +19,7 @@
             v-model="email"
             type="email"
             placeholder="Email"
-          />
-          <span class="icon is-small is-left">
-            <i class="fas fa-envelope"></i>
-          </span>
-          <span class="icon is-small is-right">
-            <i class="fas fa-check"></i>
-          </span>
+          />         
         </p>
       </div>
       <div class="field">
@@ -35,14 +29,8 @@
             v-model="password"
             type="password"
             placeholder="Password"
-          />
-          <span class="icon is-small is-left">
-            <i class="fas fa-lock"></i>
-          </span>
-        </p>
-        <div class="block is-flex is-justify-content-center">
-          <!-- <p class="subtitle" v-if="errMsg">{{ errMsg }}</p> -->
-        </div>
+          />          
+        </p>        
       </div>
       <div class="field">
         <p class="control is-flex is-justify-content-center">
