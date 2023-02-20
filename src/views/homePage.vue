@@ -199,7 +199,7 @@ main {
   flex-direction: column;
   height: 100vh;
   width: 100%;
-  padding-top: 50px;
+  padding-top: 10px;
 }
 .wrapperTodo {
   width: 100%;

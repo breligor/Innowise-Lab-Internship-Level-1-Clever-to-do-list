@@ -114,6 +114,10 @@ export default {
 .calendar-header {
   display: flex;
   justify-content: space-around;
+  align-items: center;
+  h1{
+    margin-bottom: 0;
+  }
 }
 .calendar-header:not(:last-child) {
   margin-bottom: 20px;
@@ -148,8 +152,8 @@ export default {
   background-color: rgb(255, 210, 210);
 }
 .tablet {
-  width: 140px;
-  height: 1300px;
+  width: 120px;
+  height: 100vw;
   overflow-y: auto;
   overflow-x: hidden;
   transform: rotate(-90deg) translateY(-100px);
