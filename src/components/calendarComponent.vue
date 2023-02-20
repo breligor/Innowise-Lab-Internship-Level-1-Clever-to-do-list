@@ -45,36 +45,16 @@
 </template>
 
 <script>
+import { days, nowDate, month, year, monthList } from "@/data";
 export default {
   props: ["todos"],
   data() {
     return {
-      days: [
-        "Воскресенье",
-        "Понедельник",
-        "Вторник",
-        "Среда",
-        "Четверг",
-        "Пятница",
-        "Суббота",
-      ],
-      nowDate: new Date().getDate(),
-      month: new Date().getMonth(),
-      year: new Date().getFullYear(),
-      monthList: [
-        "Январь",
-        "Февраль",
-        "Март",
-        "Апрель",
-        "Май",
-        "Июнь",
-        "Июль",
-        "Август",
-        "Сентябрь",
-        "Октябрь",
-        "Ноябрь",
-        "Декабрь",
-      ],
+      days,
+      nowDate,
+      month,
+      year,
+      monthList,
       isOtherMonth: "",
       arr: [],
       id: "",
