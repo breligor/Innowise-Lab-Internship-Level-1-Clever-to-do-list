@@ -71,12 +71,14 @@
 
 <script setup>
 import { ref } from "vue";
-import { auth } from "@/firebaseApp";
+import { useFirebaseApi } from "@/firebaseApp";
 import { useRouter } from "vue-router";
 import baseInput from "@/components/baseInput.vue";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { showToastSuccess, showToastError } from "@/toastFunctions";
+import { useNotificationApi } from "@/toastFunctions";
 
+const { auth } = useFirebaseApi();
+const { showToastSuccess, showToastError } = useNotificationApi();
 const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");

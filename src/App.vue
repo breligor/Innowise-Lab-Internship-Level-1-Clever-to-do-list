@@ -17,8 +17,9 @@ import { onMounted, onBeforeMount, ref } from "vue";
 import { useRouter } from "vue-router";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useFirebaseApi } from "@/firebaseApp";
-import { showToastSuccess } from "@/toastFunctions";
+import { useNotificationApi } from "@/toastFunctions";
 
+const { showToastSuccess } = useNotificationApi();
 const router = useRouter();
 const isLoggedIn = ref(false);
 const { auth } = useFirebaseApi();
