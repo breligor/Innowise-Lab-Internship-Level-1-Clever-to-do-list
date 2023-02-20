@@ -8,30 +8,23 @@
     <div class="calendarItemsWrapper">
       <div class="tablet pl-4">
         <div
-          :class="{
-            current: date.date.getDate() === nowDate,
-            'other-month': date.date.getMonth() !== month,
-          }"
+          :class="[item.getDayClass, item.getMonthClass]"
           class="date box"
-          :key="date.date.toLocaleDateString()"
-          v-for="(date, index) in dates"
+          :key="item.id"
+          v-for="(item, index) in dates"
           @click="getDate(index)"
         >
           <div>
-            <h1>{{ days[date.date.getDay()] }}</h1>
+            <h1>{{ days[item.date.getDay()] }}</h1>
           </div>
           <div>
-            <h1 class="subtitle">{{ date.date.getDate() }}</h1>
+            <h1 class="subtitle">{{ item.date.getDate() }}</h1>
           </div>
           <div>
-            <span
-              v-show="hasActiveTask(date.id)"
-              class="is-size-4 has-text-danger"
+            <span v-show="hasActiveTask(item.id)" class="is-size-4 has-text-danger"
               >•</span
             >
-            <span
-              v-show="hasDoneTask(date.id)"
-              class="is-size-4 has-text-success"
+            <span v-show="hasDoneTask(item.id)" class="is-size-4 has-text-success"
               >•</span
             >
           </div>
@@ -43,6 +36,7 @@
 
 <script>
 import { days, nowDate, month, year, monthList } from "@/data";
+
 export default {
   props: ["todos"],
   data() {
@@ -65,14 +59,17 @@ export default {
         day = 6;
       }
       let start = 1 - day;
-      let dates = [];
+      let datesList = [];
       for (let i = 0; i < 36; i++) {
-        dates.push({
-          date: new Date(this.year, this.month, start + i),
-          id: new Date(this.year, this.month, start + i).toLocaleDateString(),
+        let newDate = new Date(this.year, this.month, start + i);
+        datesList.push({
+          date: newDate,
+          id: newDate.toLocaleDateString(),
+          getDayClass: newDate.getDate() === this.nowDate ? "current" : "",
+          getMonthClass: newDate.getMonth() !== this.month ? "other-month" : "",
         });
       }
-      return dates;
+      return datesList;
     },
   },
   methods: {
@@ -104,9 +101,7 @@ export default {
 
     // определяем наличие сделанных тасок
     hasDoneTask(id) {
-      const temp = this.todos
-        .filter((it) => it.taskDate === id)
-        .map((it) => it.done);
+      const temp = this.todos.filter((it) => it.taskDate === id).map((it) => it.done);
       return temp.includes(true) ? true : false;
     },
   },
@@ -137,7 +132,6 @@ export default {
     cursor: pointer;
   }
 }
-
 .day {
   font-weight: bold;
   background-color: rgb(44, 56, 90);
