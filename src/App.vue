@@ -16,11 +16,12 @@
 import { onMounted, onBeforeMount, ref } from "vue";
 import { useRouter } from "vue-router";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "@/firebaseApp";
-import { showToastSuccess } from "@/toastFunctions"
+import { useFirebaseApi } from "@/firebaseApp";
+import { showToastSuccess } from "@/toastFunctions";
 
 const router = useRouter();
 const isLoggedIn = ref(false);
+const { auth } = useFirebaseApi();
 
 onBeforeMount(() => {
   onAuthStateChanged(auth, (user) => {

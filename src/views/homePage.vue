@@ -93,8 +93,7 @@
 <script setup>
 import calendarComponent from "@/components/calendarComponent.vue";
 import { ref, onMounted } from "vue";
-import { dbStore } from "@/firebaseApp";
-import { auth } from "@/firebaseApp";
+import { useFirebaseApi } from "@/firebaseApp";
 import {
   doc,
   collection,
@@ -106,6 +105,7 @@ import {
   orderBy,
 } from "@firebase/firestore";
 
+const { auth,dbStore } = useFirebaseApi();
 const user = auth.currentUser;
 const userId = user.uid;
 const todos = ref([]);
