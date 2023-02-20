@@ -14,11 +14,8 @@
           }"
           class="date box"
           :key="date.date.toLocaleDateString()"
-          v-for="date in dates"
-          @click="
-            this.id = date.date.toLocaleDateString();
-            getDate();
-          "
+          v-for="(date, index) in dates"
+          @click="getDate(index)"
         >
           <div>
             <h1>{{ days[date.date.getDay()] }}</h1>
@@ -94,8 +91,9 @@ export default {
       }
     },
     //передаем дату дня в  род.компонент для фильтрации тасок по дням
-    getDate() {
-      this.$emit("getDate", this.id);
+    getDate(index) {
+      this.id = this.dates[index].date.toLocaleDateString(); // по клику получаем id дня === дате  в нужном формате
+      this.$emit("getDate", this.id); // отправляем этот  id в homePage для фильтрации массива всех тасок по этому id
     },
 
     //определяем, содержится ли конкретный день календаря в массиве существующих тасок
