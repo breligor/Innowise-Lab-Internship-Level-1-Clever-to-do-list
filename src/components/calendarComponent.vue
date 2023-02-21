@@ -15,16 +15,16 @@
           @click="getDate(index)"
         >
           <div>
-            <h1>{{ days[item.date.getDay()] }}</h1>
+            <h1>{{ item.weekDay }}</h1>
           </div>
           <div>
-            <h1 class="subtitle">{{ item.date.getDate() }}</h1>
+            <h1 class="subtitle">{{ item.numberDay }}</h1>
           </div>
           <div>
-            <span v-show="hasActiveTask(item.id)" class="is-size-4 has-text-danger"
+            <span v-show="item.hasActiveTask" class="is-size-4 has-text-danger"
               >•</span
             >
-            <span v-show="hasDoneTask(item.id)" class="is-size-4 has-text-success"
+            <span v-show="item.hasDoneTask" class="is-size-4 has-text-success"
               >•</span
             >
           </div>
@@ -67,10 +67,22 @@ export default {
           id: newDate.toLocaleDateString(),
           getDayClass: newDate.getDate() === this.nowDate ? "current" : "",
           getMonthClass: newDate.getMonth() !== this.month ? "other-month" : "",
+          weekDay: this.days[newDate.getDay()],
+          numberDay: newDate.getDate(),
+          hasActiveTask: this.todos
+            .map((it) => it.taskDate)
+            .includes(newDate.toLocaleDateString()),
+          hasDoneTask: this.todos
+            .filter((it) => it.taskDate === newDate.toLocaleDateString())
+            .map((it) => it.done)
+            .includes(true)
+            ? true
+            : false,
         });
       }
       return datesList;
     },
+    
   },
   methods: {
     monthAgo() {
@@ -87,22 +99,11 @@ export default {
         this.year++;
       }
     },
+
     //передаем дату дня в  род.компонент для фильтрации тасок по дням
     getDate(index) {
       this.id = this.dates[index].date.toLocaleDateString(); // по клику получаем id дня === дате  в нужном формате
       this.$emit("getDate", this.id); // отправляем этот  id в homePage для фильтрации массива всех тасок по этому id
-    },
-
-    //определяем, содержится ли конкретный день календаря в массиве существующих тасок
-    //для определения дней, отмечаемых точкой
-    hasActiveTask(id) {
-      return this.todos.map((it) => it.taskDate).includes(id);
-    },
-
-    // определяем наличие сделанных тасок
-    hasDoneTask(id) {
-      const temp = this.todos.filter((it) => it.taskDate === id).map((it) => it.done);
-      return temp.includes(true) ? true : false;
     },
   },
 };
@@ -115,7 +116,7 @@ export default {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  h1{
+  h1 {
     margin-bottom: 0;
   }
 }
