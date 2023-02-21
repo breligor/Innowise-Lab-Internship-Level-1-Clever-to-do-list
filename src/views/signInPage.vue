@@ -14,8 +14,7 @@
       </div>
       <div class="field">
         <p class="control has-icons-left has-icons-right">
-          <baseInput
-            class="input"
+          <baseInput            
             v-model="email"
             type="email"
             placeholder="Email"
@@ -24,8 +23,7 @@
       </div>
       <div class="field">
         <p class="control has-icons-left">
-          <baseInput
-            class="input"
+          <baseInput            
             v-model="password"
             type="password"
             placeholder="Password"
@@ -44,7 +42,7 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import baseInput from "@/components/baseInput.vue";
+import baseInput from "@/components/base/baseInput.vue";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNotificationApi } from "@/toastFunctions";
 import { useFirebaseApi } from "@/firebaseApp";

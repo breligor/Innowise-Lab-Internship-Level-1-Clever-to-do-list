@@ -1,6 +1,6 @@
 <template>
   <calendarComponent
-    class="calendar"
+   
     @getDate="filteredTasksByDate"
     :todos="todos"
   ></calendarComponent>
@@ -10,15 +10,14 @@
       <form @submit.prevent="addTodo()">
         <div class="field is-grouped mb-5">
           <p class="control is-expanded">
-            <input
-              v-model="newTodoContent"
-              class="input"
+            <baseInput
+              v-model="newTodoContent"              
               type="text"
               placeholder="Add a todo..."
             />
           </p>
           <p class="control">
-            <input class="input" type="date" v-model="makeDay" required />
+            <baseInput type="date" v-model="makeDay" required />
           </p>
           <p class="control">
             <button :disabled="!newTodoContent" class="button is-info">Add</button>
@@ -54,9 +53,9 @@
                     >
                       {{ todo.content }}
                     </div>
-                    <input
+                    <baseInput
                       v-else
-                      class="input editInput"
+                      class="editInput"
                       v-model="todo.content"
                       type="text"
                       @blur="doneEdit(todo, todo.id)"
@@ -91,6 +90,7 @@
 </template>
 
 <script setup>
+import baseInput from "@/components/base/baseInput.vue"
 import calendarComponent from "@/components/calendarComponent.vue";
 import { ref, onMounted } from "vue";
 import { useFirebaseApi } from "@/firebaseApp";
@@ -230,8 +230,5 @@ main {
 .todo-item-wrapper-scroll {
   overflow-y: auto;
   max-height: 600px;
-}
-.calendar {
-  height: 200px;
 }
 </style>
