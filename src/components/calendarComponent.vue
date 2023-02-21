@@ -1,5 +1,5 @@
 <template>
-  <div id="calendar">
+  <div id="calendar" class="calendar">
     <div class="calendar-header">
       <button @click="monthAgo" class="button is-rounded">prev</button>
       <h1 class="subtitle">{{ monthList[month] }} {{ year }}</h1>
@@ -8,33 +8,23 @@
     <div class="calendarItemsWrapper">
       <div class="tablet pl-4">
         <div
-          :class="{
-            current: date.date.getDate() === nowDate,
-            'other-month': date.date.getMonth() !== month,
-          }"
+          :class="[item.getDayClass, item.getMonthClass]"
           class="date box"
-          :key="date.date.toLocaleDateString()"
-          v-for="date in dates"
-          @click="
-            this.id = date.date.toLocaleDateString();
-            getDate();
-          "
+          :key="item.id"
+          v-for="(item, index) in dates"
+          @click="getDate(index)"
         >
           <div>
-            <h1>{{ days[date.date.getDay()] }}</h1>
+            <h1>{{ item.weekDay }}</h1>
           </div>
           <div>
-            <h1 class="subtitle">{{ date.date.getDate() }}</h1>
+            <h1 class="subtitle">{{ item.numberDay }}</h1>
           </div>
           <div>
-            <span
-              v-show="hasActiveTask(date.id)"
-              class="is-size-4 has-text-danger"
+            <span v-show="item.hasActiveTask" class="is-size-4 has-text-danger"
               >•</span
             >
-            <span
-              v-show="hasDoneTask(date.id)"
-              class="is-size-4 has-text-success"
+            <span v-show="item.hasDoneTask" class="is-size-4 has-text-success"
               >•</span
             >
           </div>
@@ -45,36 +35,17 @@
 </template>
 
 <script>
+import { days, nowDate, month, year, monthList } from "@/data";
+
 export default {
   props: ["todos"],
   data() {
     return {
-      days: [
-        "Воскресенье",
-        "Понедельник",
-        "Вторник",
-        "Среда",
-        "Четверг",
-        "Пятница",
-        "Суббота",
-      ],
-      nowDate: new Date().getDate(),
-      month: new Date().getMonth(),
-      year: new Date().getFullYear(),
-      monthList: [
-        "Январь",
-        "Февраль",
-        "Март",
-        "Апрель",
-        "Май",
-        "Июнь",
-        "Июль",
-        "Август",
-        "Сентябрь",
-        "Октябрь",
-        "Ноябрь",
-        "Декабрь",
-      ],
+      days,
+      nowDate,
+      month,
+      year,
+      monthList,
       isOtherMonth: "",
       arr: [],
       id: "",
@@ -88,14 +59,28 @@ export default {
         day = 6;
       }
       let start = 1 - day;
-      let dates = [];
+      let datesList = [];
       for (let i = 0; i < 36; i++) {
-        dates.push({
-          date: new Date(this.year, this.month, start + i),
-          id: new Date(this.year, this.month, start + i).toLocaleDateString(),
+        let newDate = new Date(this.year, this.month, start + i);
+        datesList.push({
+          date: newDate,
+          id: newDate.toLocaleDateString(),
+          getDayClass: newDate.getDate() === this.nowDate ? "current" : "",
+          getMonthClass: newDate.getMonth() !== this.month ? "other-month" : "",
+          weekDay: this.days[newDate.getDay()],
+          numberDay: newDate.getDate(),
+          hasActiveTask: this.todos
+            .map((it) => it.taskDate)
+            .includes(newDate.toLocaleDateString()),
+          hasDoneTask: this.todos
+            .filter((it) => it.taskDate === newDate.toLocaleDateString())
+            .map((it) => it.done)
+            .includes(true)
+            ? true
+            : false,
         });
       }
-      return dates;
+      return datesList;
     },
   },
   methods: {
@@ -113,23 +98,11 @@ export default {
         this.year++;
       }
     },
+
     //передаем дату дня в  род.компонент для фильтрации тасок по дням
-    getDate() {
-      this.$emit("getDate", this.id);
-    },
-
-    //определяем, содержится ли конкретный день календаря в массиве существующих тасок
-    //для определения дней, отмечаемых точкой
-    hasActiveTask(id) {
-      return this.todos.map((it) => it.taskDate).includes(id);
-    },
-
-    // определяем наличие сделанных тасок
-    hasDoneTask(id) {
-      const temp = this.todos
-        .filter((it) => it.taskDate === id)
-        .map((it) => it.done);
-      return temp.includes(true) ? true : false;
+    getDate(index) {
+      this.id = this.dates[index].date.toLocaleDateString(); // по клику получаем id дня === дате  в нужном формате
+      this.$emit("getDate", this.id); // отправляем этот  id в homePage для фильтрации массива всех тасок по этому id
     },
   },
 };
@@ -138,9 +111,16 @@ export default {
 <style lang="scss" scoped>
 @import "bulma/css/bulma.min.css";
 
+.calendar {
+  height: 200px;
+}
 .calendar-header {
   display: flex;
   justify-content: space-around;
+  align-items: center;
+  h1 {
+    margin-bottom: 0;
+  }
 }
 .calendar-header:not(:last-child) {
   margin-bottom: 20px;
@@ -159,7 +139,6 @@ export default {
     cursor: pointer;
   }
 }
-
 .day {
   font-weight: bold;
   background-color: rgb(44, 56, 90);
@@ -176,8 +155,8 @@ export default {
   background-color: rgb(255, 210, 210);
 }
 .tablet {
-  width: 140px;
-  height: 1300px;
+  width: 120px;
+  height: 100vw;
   overflow-y: auto;
   overflow-x: hidden;
   transform: rotate(-90deg) translateY(-100px);

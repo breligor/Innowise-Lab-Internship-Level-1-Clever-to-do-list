@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { getCurrentUser } from "@/firebaseApp"
+import { useFirebaseApi } from "@/firebaseApp";
+
+const { getCurrentUser } = useFirebaseApi();
 
 const router = createRouter({
   history: createWebHistory(),

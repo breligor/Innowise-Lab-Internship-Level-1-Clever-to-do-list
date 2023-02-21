@@ -14,39 +14,25 @@
       </div>
       <div class="field">
         <p class="control has-icons-left has-icons-right">
-          <baseInput
-            class="input"
+          <baseInput            
             v-model="email"
             type="email"
             placeholder="Email"
-          />
-          <span class="icon is-small is-left">
-            <i class="fas fa-envelope"></i>
-          </span>
-          <span class="icon is-small is-right">
-            <i class="fas fa-check"></i>
-          </span>
+          />         
         </p>
       </div>
       <div class="field">
         <p class="control has-icons-left">
-          <baseInput
-            class="input"
+          <baseInput            
             v-model="password"
             type="password"
             placeholder="Password"
-          />
-          <span class="icon is-small is-left">
-            <i class="fas fa-lock"></i>
-          </span>
-        </p>
-        <div class="block is-flex is-justify-content-center">
-          <!-- <p class="subtitle" v-if="errMsg">{{ errMsg }}</p> -->
-        </div>
+          />          
+        </p>        
       </div>
       <div class="field">
         <p class="control is-flex is-justify-content-center">
-          <button @click="signIn" class="button is-success">Login</button>
+          <baseButton @click="signIn" class="is-success">Login</baseButton>
         </p>
       </div>
     </div>
@@ -55,18 +41,19 @@
 
 <script setup>
 import { ref } from "vue";
-import { auth } from "@/firebaseApp";
 import { useRouter } from "vue-router";
-import baseInput from "@/components/baseInput.vue";
+import baseInput from "@/components/base/baseInput.vue";
+import baseButton from "@/components/base/baseButton.vue";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import {showToastSuccess, showToastError } from "@/toastFunctions"
+import { useNotificationApi } from "@/toastFunctions";
+import { useFirebaseApi } from "@/firebaseApp";
 
+const { auth } = useFirebaseApi();
+const { showToastSuccess, showToastError } = useNotificationApi();
 const email = ref("");
 const password = ref("");
 const errMsg = ref("");
 const router = useRouter();
-
-
 
 const signIn = () => {
   signInWithEmailAndPassword(auth, email.value, password.value)

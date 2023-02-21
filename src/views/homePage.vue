@@ -1,33 +1,28 @@
 <template>
-  <calendarComponent
-    class="calendar"
-    @getDate="filteredByDateTasks"
+  <calendarComponent   
+    @getDate="filteredTasksByDate"
     :todos="todos"
   ></calendarComponent>
-  <main>    
+  <main>
     <div class="wrapperTodo">
-      <div class="btnWrapper">
-        <button @click="handleSignOut" v-if="isLoggedIn">Sign out</button>
-      </div>
       <div class="title has-text-centered">WHAT's TODO</div>
-
-      <form @submit.prevent="addTodo">
+      <form @submit.prevent="addTodo()">
         <div class="field is-grouped mb-5">
           <p class="control is-expanded">
-            <input
-              v-model="newTodoContent"
-              class="input"
+            <baseInput
+              v-model="newTodoContent"              
               type="text"
               placeholder="Add a todo..."
             />
           </p>
           <p class="control">
-            <input class="input" type="date" v-model="makeDay" required />
+            <baseInput 
+            v-model="makeDay" 
+            type="date"  
+            required />
           </p>
           <p class="control">
-            <button :disabled="!newTodoContent" class="button is-info">
-              Add
-            </button>
+            <baseButton :disabled="!newTodoContent" class="is-info">Add</baseButton>
           </p>
         </div>
       </form>
@@ -35,14 +30,12 @@
         <div class="todoQuantity block">
           {{ "Количество заданий: " + todosForRender.length }}
         </div>
-        <div class="btnShowAllTasksWrapper">
-          <button @click="showAllTasks" class="button is-info ml-2">
-            show all
-          </button>
+        <div>
+          <baseButton @click="showAllTasks()" class="is-info">show all</baseButton>
         </div>
       </div>
       <div class="todo-item-wrapper-scroll">
-        <div class="todo-item-wrapper">
+        <div>
           <div
             :class="{ 'has-background-success-light': todo.done }"
             class="card mb-5"
@@ -54,7 +47,7 @@
                 <div class="is-flex is-justify-content-space-between">
                   <div class="todo-content">
                     <div
-                      v-if="!todo.editing"
+                      v-if="!todo.editing"                      
                       @dblclick="editTodo(todo)"
                       class="column"
                       :class="{ 'has-text-success line-through': todo.done }"
@@ -62,35 +55,31 @@
                     >
                       {{ todo.content }}
                     </div>
-                    <input
+                    <baseInput
                       v-else
-                      class="input editInput"
+                      class="editInput"
                       v-model="todo.content"
                       type="text"
                       @blur="doneEdit(todo, todo.id)"
                       @keyup.enter="doneEdit(todo, todo.id)"
                     />
                   </div>
-
                   <div
                     class="is-flex is-justify-content-space-between is-align-items-center"
                   >
                     <div class="is-flex is-align-items-center">
                       <p class="control">{{ todo.taskDate }}</p>
                     </div>
-                    <button
+                    <baseButton
                       @click="toggleDone(todo.id)"
                       :class="todo.done ? 'is-success' : 'is-light'"
-                      class="button ml-2"
+                      class="ml-2"
                     >
                       &check;
-                    </button>
-                    <button
-                      @click="deleteTodo(todo.id)"
-                      class="button is-danger ml-2"
-                    >
+                    </baseButton>
+                    <baseButton @click="deleteTodo(todo.id)" class="is-danger ml-2">
                       &cross;
-                    </button>
+                    </baseButton>
                   </div>
                 </div>
               </div>
@@ -103,10 +92,11 @@
 </template>
 
 <script setup>
+import baseInput from "@/components/base/baseInput.vue"
+import baseButton from "@/components/base/baseButton.vue"
 import calendarComponent from "@/components/calendarComponent.vue";
 import { ref, onMounted } from "vue";
-import { dbStore } from "@/firebaseApp";
-import { auth } from "@/firebaseApp";
+import { useFirebaseApi } from "@/firebaseApp";
 import {
   doc,
   collection,
@@ -117,12 +107,12 @@ import {
   query,
   orderBy,
 } from "@firebase/firestore";
-import { isLoggedIn } from "@/App";
 
+const { auth, dbStore } = useFirebaseApi();
 const user = auth.currentUser;
 const userId = user.uid;
 const todos = ref([]);
-const todosForRender = ref([]);
+const todosForRender = ref([]); //array to filter
 const newTodoContent = ref("");
 const todosCollectionRef = collection(dbStore, `${userId}`);
 const todosCollectionQuery = query(todosCollectionRef, orderBy("date", "desc"));
@@ -138,8 +128,7 @@ const addTodo = () => {
     editing: false,
     taskDate: makeDay.value,
   });
-  newTodoContent.value = ""; 
-  console.log(makeDay.value);
+  newTodoContent.value = "";
   makeDay.value = "";
 };
 
@@ -158,25 +147,25 @@ onMounted(() => {
         editing: false,
         taskDate: new Date(doc.data().taskDate).toLocaleDateString(),
       };
-
       fbTodos.push(todo);
     });
+
     todos.value = fbTodos;
-    todosForRender.value = fbTodos;     
+    todosForRender.value = fbTodos;
   });
 });
 
 //del btn
 const deleteTodo = (id) => {
-  deleteDoc(doc(todosCollectionRef, id));  
+  deleteDoc(doc(todosCollectionRef, id));
 };
 
 //update
 const toggleDone = (id) => {
-  const index = todos.value.findIndex((todo) => todo.id === id); 
+  const index = todosForRender.value.findIndex((todo) => todo.id === id);
 
   updateDoc(doc(todosCollectionRef, id), {
-    done: !todos.value[index].done,
+    done: !todosForRender.value[index].done,
   });
 };
 
@@ -187,14 +176,14 @@ const editTodo = (todo) => {
 
 const doneEdit = (todo, id) => {
   todo.editing = false;
-  const index = todos.value.findIndex((todo) => todo.id === id);
+  const index = todosForRender.value.findIndex((todo) => todo.id === id);
   updateDoc(doc(todosCollectionRef, id), {
-    content: todos.value[index].content,
+    content: todosForRender.value[index].content,
   });
 };
 
 // получаем дату дня из компонента Calendar для фильтрации тасок по дню и фильтруем массив по которому рендерим
-const filteredByDateTasks = (chosenDate) => {
+const filteredTasksByDate = (chosenDate) => {
   todosForRender.value = todos.value.filter((it) => it.taskDate === chosenDate);
 };
 
@@ -213,7 +202,7 @@ main {
   flex-direction: column;
   height: 100vh;
   width: 100%;
-  padding-top: 50px;
+  padding-top: 10px;
 }
 .wrapperTodo {
   width: 100%;
@@ -244,8 +233,5 @@ main {
 .todo-item-wrapper-scroll {
   overflow-y: auto;
   max-height: 600px;
-}
-.calendar {
-  height: 200px;
 }
 </style>
