@@ -1,5 +1,5 @@
 <template>
-  <div id="calendar">
+  <div id="calendar" class="calendar">
     <div class="calendar-header">
       <button @click="monthAgo" class="button is-rounded">prev</button>
       <h1 class="subtitle">{{ monthList[month] }} {{ year }}</h1>
@@ -82,7 +82,6 @@ export default {
       }
       return datesList;
     },
-    
   },
   methods: {
     monthAgo() {
@@ -112,6 +111,9 @@ export default {
 <style lang="scss" scoped>
 @import "bulma/css/bulma.min.css";
 
+.calendar {
+  height: 200px;
+}
 .calendar-header {
   display: flex;
   justify-content: space-around;
