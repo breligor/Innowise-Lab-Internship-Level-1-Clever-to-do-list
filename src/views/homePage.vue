@@ -1,6 +1,5 @@
 <template>
-  <calendarComponent
-   
+  <calendarComponent   
     @getDate="filteredTasksByDate"
     :todos="todos"
   ></calendarComponent>
@@ -17,10 +16,13 @@
             />
           </p>
           <p class="control">
-            <baseInput type="date" v-model="makeDay" required />
+            <baseInput 
+            v-model="makeDay" 
+            type="date"  
+            required />
           </p>
           <p class="control">
-            <button :disabled="!newTodoContent" class="button is-info">Add</button>
+            <baseButton :disabled="!newTodoContent" class="is-info">Add</baseButton>
           </p>
         </div>
       </form>
@@ -29,7 +31,7 @@
           {{ "Количество заданий: " + todosForRender.length }}
         </div>
         <div>
-          <button @click="showAllTasks()" class="button is-info ml-2">show all</button>
+          <baseButton @click="showAllTasks()" class="is-info">show all</baseButton>
         </div>
       </div>
       <div class="todo-item-wrapper-scroll">
@@ -68,16 +70,16 @@
                     <div class="is-flex is-align-items-center">
                       <p class="control">{{ todo.taskDate }}</p>
                     </div>
-                    <button
+                    <baseButton
                       @click="toggleDone(todo.id)"
                       :class="todo.done ? 'is-success' : 'is-light'"
-                      class="button ml-2"
+                      class="ml-2"
                     >
                       &check;
-                    </button>
-                    <button @click="deleteTodo(todo.id)" class="button is-danger ml-2">
+                    </baseButton>
+                    <baseButton @click="deleteTodo(todo.id)" class="is-danger ml-2">
                       &cross;
-                    </button>
+                    </baseButton>
                   </div>
                 </div>
               </div>
@@ -91,6 +93,7 @@
 
 <script setup>
 import baseInput from "@/components/base/baseInput.vue"
+import baseButton from "@/components/base/baseButton.vue"
 import calendarComponent from "@/components/calendarComponent.vue";
 import { ref, onMounted } from "vue";
 import { useFirebaseApi } from "@/firebaseApp";
