@@ -1,18 +1,19 @@
 <template>
   <div class="btnWrapper">
-    <button
+    <baseButton
       @click="handleSignOut"
       v-if="isLoggedIn"
-      class="button is-danger is-hovered"
+      class="is-danger is-hovered"
       title="would you like to get out?"
     >
       Get out
-    </button>
+    </baseButton>
   </div>
   <router-view />
 </template>
 
 <script setup>
+import baseButton from "@/components/base/baseButton.vue"
 import { onMounted, onBeforeMount, ref } from "vue";
 import { useRouter } from "vue-router";
 import { onAuthStateChanged, signOut } from "firebase/auth";

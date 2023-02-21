@@ -32,7 +32,7 @@
       </div>
       <div class="field">
         <p class="control is-flex is-justify-content-center">
-          <button @click="signIn" class="button is-success">Login</button>
+          <baseButton @click="signIn" class="is-success">Login</baseButton>
         </p>
       </div>
     </div>
@@ -43,6 +43,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import baseInput from "@/components/base/baseInput.vue";
+import baseButton from "@/components/base/baseButton.vue";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNotificationApi } from "@/toastFunctions";
 import { useFirebaseApi } from "@/firebaseApp";
