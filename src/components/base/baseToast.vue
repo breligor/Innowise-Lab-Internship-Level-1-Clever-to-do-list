@@ -7,8 +7,7 @@
 
 <script>
 export default {
-  name: "baseToast",
-  props: ["errMessage"],
+  name: "baseToast", 
   methods: {
     closeToast() {
       this.$emit("closeToast", this.event);

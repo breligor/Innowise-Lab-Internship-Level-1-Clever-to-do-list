@@ -1,5 +1,8 @@
 <template>
   <div class="btnWrapper">
+    <baseToast @closeToast="closeToast()" v-if="errMessage"
+      >{{ errMessage }}
+    </baseToast>
     <baseButton
       @click="handleSignOut"
       v-if="isLoggedIn"
@@ -13,14 +16,15 @@
 </template>
 
 <script setup>
-import baseButton from "@/components/base/baseButton.vue"
+import baseToast from "@/components/base/baseToast.vue";
+import baseButton from "@/components/base/baseButton.vue";
 import { onMounted, onBeforeMount, ref } from "vue";
 import { useRouter } from "vue-router";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useFirebaseApi } from "@/firebaseApp";
 import { useNotificationApi } from "@/toastFunctions";
 
-const { showToastSuccess } = useNotificationApi();
+const { errMessage, autoHideToast } = useNotificationApi();
 const router = useRouter();
 const isLoggedIn = ref(false);
 const { auth } = useFirebaseApi();
@@ -47,7 +51,8 @@ onMounted(() => {
 
 const handleSignOut = () => {
   signOut(auth).then(() => {
-    showToastSuccess("By-By!")
+    errMessage.value = "By-By!";
+    autoHideToast(errMessage.value);
     router.push("/sign-in");
   });
 };
