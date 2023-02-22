@@ -1,5 +1,12 @@
 <template>
   <main>
+      <base-toast-transition>
+      <base-toast  
+      @closeToast="closeToast()" 
+      v-if="errMessage">
+      {{ errMessage }}
+      </base-toast>
+    </base-toast-transition>
     <div class="box">
       <div class="block is-flex is-justify-content-center">
         <h1 class="subtitle">create your todo</h1>
@@ -14,25 +21,21 @@
       </div>
       <div class="field">
         <p class="control has-icons-left has-icons-right">
-          <baseInput            
-            v-model="email"
-            type="email"
-            placeholder="Email"
-          />         
+          <base-input v-model="email" type="email" placeholder="Email" />
         </p>
       </div>
       <div class="field">
         <p class="control has-icons-left">
-          <baseInput            
+          <base-input
             v-model="password"
             type="password"
             placeholder="Password"
-          />          
-        </p>        
+          />
+        </p>
       </div>
       <div class="field">
         <p class="control is-flex is-justify-content-center">
-          <baseButton @click="signIn" class="is-success">Login</baseButton>
+          <base-button @click="signIn" class="is-success">Login</base-button>
         </p>
       </div>
     </div>
@@ -42,42 +45,42 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import baseInput from "@/components/base/baseInput.vue";
-import baseButton from "@/components/base/baseButton.vue";
+import BaseToast from "@/components/base/BaseToast.vue";
+import BaseInput from "@/components/base/BaseInput.vue"
+import BaseButton from "@/components/base/BaseButton.vue"
+import BaseToastTransition from "@/components/base/BaseToastTransition.vue";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNotificationApi } from "@/toastFunctions";
 import { useFirebaseApi } from "@/firebaseApp";
 
 const { auth } = useFirebaseApi();
-const { showToastSuccess, showToastError } = useNotificationApi();
+const { errMessage, closeToast, autoHideToast } = useNotificationApi();
 const email = ref("");
 const password = ref("");
-const errMsg = ref("");
 const router = useRouter();
 
 const signIn = () => {
   signInWithEmailAndPassword(auth, email.value, password.value)
     .then(() => {
-      showToastSuccess('Succesfully signed in');      
-      router.push("/");
+       router.push("/");      
     })
     .catch((error) => {
       switch (error.code) {
         case "auth/invalid-email":
-          errMsg.value = "invalid email";
-          showToastError(errMsg.value);
+          errMessage.value = "invalid email or password";
+          autoHideToast(errMessage.value);
           break;
         case "auth/user-not-found":
-          errMsg.value = "No created account was found";
-          showToastError(errMsg.value);
+          errMessage.value = "No created account was found";
+          autoHideToast(errMessage.value);
           break;
         case "auth/wrong-password":
-          errMsg.value = "Enter correct password";
-          showToastError(errMsg.value);
+          errMessage.value = "Enter correct password";
+          autoHideToast(errMessage.value);
           break;
         default:
-          errMsg.value = "Email or password are incorrect";
-          showToastError(errMsg.value);
+          errMessage.value = "Email or password are incorrect";
+          autoHideToast(errMessage.value);
           break;
       }
     });
@@ -94,16 +97,5 @@ main {
   height: 100vh;
   width: 100%;
   padding-top: 50px;
-}
-.toast-enter-from {
-  opacity: 0;
-  transform: translateY(-50px);
-}
-.toast-enter-to {
-  opacity: 1;
-  transform: translateY();
-}
-.toast-enter-active {
-  transition: all 0.5s ease;
 }
 </style>
