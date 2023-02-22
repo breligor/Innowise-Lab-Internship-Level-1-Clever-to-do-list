@@ -1,9 +1,29 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
-//import { useNotificationApi } from "@/toastFunctions"
+import upperFirst from "lodash/upperFirst";
+import camelCase from "lodash/camelCase";
 
+export const app = createApp(App);
 
+//глобальная регистрация Base components
+const requireComponent = require.context(
+  "./components/base",
+  false,
+  /Base[A-Z]\w+\.(vue|js)$/
+);
+requireComponent.keys().forEach((fileName) => {
+  const componentConfig = requireComponent(fileName);
 
-const app = createApp(App);
+  const componentName = upperFirst(
+    camelCase(
+      fileName
+        .split("/")
+        .pop()
+        .replace(/\.\w+$/, "")
+    )
+  );
+  app.component(componentName, componentConfig.default || componentConfig);
+});
+
 app.use(router).mount("#app");
