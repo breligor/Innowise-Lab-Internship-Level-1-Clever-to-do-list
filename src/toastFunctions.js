@@ -10,5 +10,10 @@ export function useNotificationApi() {
   const autoHideToast = () => {
     setTimeout(() => (errMessage.value = ""), 3000);
   };
-  return { errMessage, closeToast, autoHideToast };
+
+  const showToastWithDelay = (value) => {
+    setTimeout(() => (errMessage.value = value), 1000);
+  };
+
+  return { errMessage, closeToast, autoHideToast, showToastWithDelay };
 }
