@@ -52,13 +52,13 @@
 <script setup>
 
 import { ref } from "vue";
-import { useFirebaseApi } from "@/firebaseApp";
-import { useNotificationApi } from "@/toastFunctions";
+import { useFirebaseApi } from "@/composables/useFirebaseApi";
+import { useNotification } from "@/composables/useNotification";
 import { useRouter } from "vue-router";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const { auth } = useFirebaseApi();
-const { errMessage, closeToast, autoHideToast } = useNotificationApi();
+const { errMessage, closeToast, autoHideToast } = useNotification();
 const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");

@@ -47,11 +47,11 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useNotificationApi } from "@/toastFunctions";
-import { useFirebaseApi } from "@/firebaseApp";
+import { useNotification } from "@/composables/useNotification";
+import { useFirebaseApi } from "@/composables/useFirebaseApi";
 
 const { auth } = useFirebaseApi();
-const { errMessage, closeToast, autoHideToast } = useNotificationApi();
+const { errMessage, closeToast, autoHideToast } = useNotification();
 const email = ref("");
 const password = ref("");
 const router = useRouter();
