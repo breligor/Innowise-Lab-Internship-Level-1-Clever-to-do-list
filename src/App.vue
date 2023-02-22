@@ -1,23 +1,26 @@
 <template>
   <div class="btnWrapper">
-    <baseToast @closeToast="closeToast()" v-if="errMessage"
-      >{{ errMessage }}
-    </baseToast>
-    <baseButton
+    <base-toast-transition>
+      <base-toast @closeToast="closeToast()" v-if="errMessage"
+        >{{ errMessage }}
+      </base-toast>
+    </base-toast-transition>
+    <base-button
       @click="handleSignOut"
       v-if="isLoggedIn"
       class="is-danger is-hovered"
       title="would you like to get out?"
     >
       Get out
-    </baseButton>
+    </base-button>
   </div>
   <router-view />
 </template>
 
 <script setup>
-import baseToast from "@/components/base/baseToast.vue";
-import baseButton from "@/components/base/baseButton.vue";
+import BaseToast from "@/components/base/BaseToast.vue";
+import BaseButton from "@/components/base/BaseButton.vue";
+import BaseToastTransition from "@/components/base/BaseToastTransition.vue";
 import { onMounted, onBeforeMount, ref } from "vue";
 import { useRouter } from "vue-router";
 import { onAuthStateChanged, signOut } from "firebase/auth";

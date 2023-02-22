@@ -1,5 +1,5 @@
 <template>
-  <div class="notification is-danger is-light">
+  <div class="notification is-danger is-light toast">
     <button class="delete" @click="closeToast()"></button>
     <slot></slot>
   </div>
@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  name: "baseToast", 
+  name: "baseToast",
   methods: {
     closeToast() {
       this.$emit("closeToast", this.event);
@@ -18,4 +18,9 @@ export default {
 
 <style lang="scss" scoped>
 @import "bulma/css/bulma.min.css";
+.toast {
+  position: absolute;
+  z-index: 100;
+  max-width: 250px;
+}
 </style>

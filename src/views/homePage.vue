@@ -1,28 +1,37 @@
 <template>
-  <calendarComponent   
+  <calendarComponent
     @getDate="filteredTasksByDate"
     :todos="todos"
   ></calendarComponent>
   <main>
+    <base-toast-transition>
+      <base-toast class="toast" @closeToast="closeToast()" v-if="errMessage">
+        {{ errMessage }}
+      </base-toast>
+    </base-toast-transition>
     <div class="wrapperTodo">
       <div class="title has-text-centered">WHAT's TODO</div>
       <form @submit.prevent="addTodo()">
         <div class="field is-grouped mb-5">
           <p class="control is-expanded">
-            <baseInput
-              v-model="newTodoContent"              
+            <base-input
+              v-model="newTodoContent"
               type="text"
               placeholder="Add a todo..."
             />
           </p>
           <p class="control">
-            <baseInput 
-            v-model="makeDay" 
-            type="date"  
-            required />
+            <base-input 
+            v-model="makeDay"
+             type="date" 
+             required />
           </p>
           <p class="control">
-            <baseButton :disabled="!newTodoContent" class="is-info">Add</baseButton>
+            <base-button
+            :disabled="!newTodoContent" 
+            class="is-info"
+              >Add</base-button
+            >
           </p>
         </div>
       </form>
@@ -31,7 +40,11 @@
           {{ "Количество заданий: " + todosForRender.length }}
         </div>
         <div>
-          <baseButton @click="showAllTasks()" class="is-info">show all</baseButton>
+          <base-button 
+          @click="showAllTasks()" 
+          class="is-info"
+            >show all</base-button
+          >
         </div>
       </div>
       <div class="todo-item-wrapper-scroll">
@@ -47,7 +60,7 @@
                 <div class="is-flex is-justify-content-space-between">
                   <div class="todo-content">
                     <div
-                      v-if="!todo.editing"                      
+                      v-if="!todo.editing"
                       @dblclick="editTodo(todo)"
                       class="column"
                       :class="{ 'has-text-success line-through': todo.done }"
@@ -55,7 +68,7 @@
                     >
                       {{ todo.content }}
                     </div>
-                    <baseInput
+                    <base-input
                       v-else
                       class="editInput"
                       v-model="todo.content"
@@ -70,16 +83,19 @@
                     <div class="is-flex is-align-items-center">
                       <p class="control">{{ todo.taskDate }}</p>
                     </div>
-                    <baseButton
+                    <base-button
                       @click="toggleDone(todo.id)"
                       :class="todo.done ? 'is-success' : 'is-light'"
                       class="ml-2"
                     >
                       &check;
-                    </baseButton>
-                    <baseButton @click="deleteTodo(todo.id)" class="is-danger ml-2">
+                    </base-button>
+                    <base-button
+                      @click="deleteTodo(todo.id)"
+                      class="is-danger ml-2"
+                    >
                       &cross;
-                    </baseButton>
+                    </base-button>
                   </div>
                 </div>
               </div>
@@ -92,8 +108,10 @@
 </template>
 
 <script setup>
-import baseInput from "@/components/base/baseInput.vue"
-import baseButton from "@/components/base/baseButton.vue"
+import BaseToast from "@/components/base/BaseToast.vue";
+import BaseInput from "@/components/base/BaseInput.vue";
+import BaseButton from "@/components/base/BaseButton.vue";
+import BaseToastTransition from "@/components/base/BaseToastTransition.vue";
 import calendarComponent from "@/components/calendarComponent.vue";
 import { ref, onMounted } from "vue";
 import { useFirebaseApi } from "@/firebaseApp";
@@ -107,7 +125,10 @@ import {
   query,
   orderBy,
 } from "@firebase/firestore";
+import { useNotificationApi } from "@/toastFunctions";
 
+const { errMessage, closeToast, autoHideToast, showToastWithDelay } =
+  useNotificationApi();
 const { auth, dbStore } = useFirebaseApi();
 const user = auth.currentUser;
 const userId = user.uid;
@@ -153,6 +174,8 @@ onMounted(() => {
     todos.value = fbTodos;
     todosForRender.value = fbTodos;
   });
+  showToastWithDelay("Succesfully signed in");
+  autoHideToast(errMessage.value);
 });
 
 //del btn
@@ -229,6 +252,12 @@ main {
   border: none;
   outline: none;
   box-shadow: none;
+}
+.toast {
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
 }
 .todo-item-wrapper-scroll {
   overflow-y: auto;

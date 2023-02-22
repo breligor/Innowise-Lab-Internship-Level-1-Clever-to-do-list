@@ -1,9 +1,10 @@
 <template>
   <main>
-    <baseToast @closeToast="closeToast()" v-if="errMessage"
+    <base-toast-transition>
+    <base-toast @closeToast="closeToast()" v-if="errMessage"
       >{{ errMessage }}
-    </baseToast>
-
+    </base-toast>
+  </base-toast-transition>
     <div class="box">
       <div class="block is-flex is-justify-content-center">
         <h1 class="subtitle">create your todo</h1>
@@ -18,12 +19,12 @@
       </div>
       <div class="field">
         <p class="control has-icons-left has-icons-right">
-          <baseInput v-model="email" type="email" placeholder="Email" />
+          <base-input v-model="email" type="email" placeholder="Email" />
         </p>
       </div>
       <div class="field">
         <p class="control has-icons-left">
-          <baseInput
+          <base-input
             v-model="password"
             type="password"
             placeholder="Password"
@@ -32,7 +33,7 @@
       </div>
       <div class="field">
         <p class="control has-icons-left">
-          <baseInput
+          <base-input
             v-model="confirmPassword"
             type="password"
             placeholder="Confirm password"
@@ -41,7 +42,7 @@
       </div>
       <div class="field">
         <p class="control is-flex is-justify-content-center">
-          <baseButton @click="register" class="is-success">Login</baseButton>
+          <base-button @click="register" class="is-success">Login</base-button>
         </p>
       </div>
     </div>
@@ -54,9 +55,11 @@ import { useFirebaseApi } from "@/firebaseApp";
 import { useNotificationApi } from "@/toastFunctions";
 import { useRouter } from "vue-router";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import baseInput from "@/components/base/baseInput.vue";
-import baseToast from "@/components/base/baseToast.vue";
-import baseButton from "@/components/base/baseButton.vue";
+import BaseToast from "@/components/base/BaseToast.vue";
+import BaseInput from "@/components/base/BaseInput.vue"
+import BaseButton from "@/components/base/BaseButton.vue"
+import BaseToastTransition from "@/components/base/BaseToastTransition.vue";
+
 
 const { auth } = useFirebaseApi();
 const { errMessage, closeToast, autoHideToast } = useNotificationApi();
