@@ -50,16 +50,12 @@
 </template>
 
 <script setup>
+
 import { ref } from "vue";
 import { useFirebaseApi } from "@/firebaseApp";
 import { useNotificationApi } from "@/toastFunctions";
 import { useRouter } from "vue-router";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import BaseToast from "@/components/base/BaseToast.vue";
-import BaseInput from "@/components/base/BaseInput.vue"
-import BaseButton from "@/components/base/BaseButton.vue"
-import BaseToastTransition from "@/components/base/BaseToastTransition.vue";
-
 
 const { auth } = useFirebaseApi();
 const { errMessage, closeToast, autoHideToast } = useNotificationApi();

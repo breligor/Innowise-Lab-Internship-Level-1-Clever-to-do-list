@@ -18,9 +18,7 @@
 </template>
 
 <script setup>
-import BaseToast from "@/components/base/BaseToast.vue";
-import BaseButton from "@/components/base/BaseButton.vue";
-import BaseToastTransition from "@/components/base/BaseToastTransition.vue";
+
 import { onMounted, onBeforeMount, ref } from "vue";
 import { useRouter } from "vue-router";
 import { onAuthStateChanged, signOut } from "firebase/auth";

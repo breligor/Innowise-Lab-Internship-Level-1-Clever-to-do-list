@@ -108,10 +108,7 @@
 </template>
 
 <script setup>
-import BaseToast from "@/components/base/BaseToast.vue";
-import BaseInput from "@/components/base/BaseInput.vue";
-import BaseButton from "@/components/base/BaseButton.vue";
-import BaseToastTransition from "@/components/base/BaseToastTransition.vue";
+
 import calendarComponent from "@/components/calendarComponent.vue";
 import { ref, onMounted } from "vue";
 import { useFirebaseApi } from "@/firebaseApp";

@@ -43,12 +43,9 @@
 </template>
 
 <script setup>
+
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import BaseToast from "@/components/base/BaseToast.vue";
-import BaseInput from "@/components/base/BaseInput.vue"
-import BaseButton from "@/components/base/BaseButton.vue"
-import BaseToastTransition from "@/components/base/BaseToastTransition.vue";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNotificationApi } from "@/toastFunctions";
 import { useFirebaseApi } from "@/firebaseApp";
