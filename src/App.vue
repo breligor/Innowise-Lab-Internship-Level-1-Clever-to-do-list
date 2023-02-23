@@ -25,7 +25,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useFirebaseApi } from "@/composables/useFirebaseApi";
 import { useNotification } from "@/composables/useNotification";
 
-const { errMessage, autoHideToast } = useNotification();
+const { errMessage, autoHideToast, closeToast } = useNotification();
 const router = useRouter();
 const isLoggedIn = ref(false);
 const { auth } = useFirebaseApi();
