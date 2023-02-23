@@ -27,8 +27,8 @@
         <div v-for="(input, i) in authForm" :key="i">
           <p class="control has-icons-left has-icons-right mb-3">
             <base-input
-              :type="input.type"
               class="input"
+              :type="input.type"
               v-model="input.model.value"
               :placeholder="input.placeholder"
             >
@@ -38,7 +38,7 @@
       </div>
       <div class="field">
         <p class="control is-flex is-justify-content-center">
-          <base-button @click="register" class="is-success">Login</base-button>
+          <base-button @click="LogIn" class="is-success">Login</base-button>
         </p>
       </div>
     </div>
@@ -50,7 +50,10 @@ import { ref, computed } from "vue";
 import { useFirebaseApi } from "@/composables/useFirebaseApi";
 import { useNotification } from "@/composables/useNotification";
 import { useRouter } from "vue-router";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 
 const email = ref("");
 const password = ref("");
@@ -112,6 +115,37 @@ const register = () => {
     errMessage.value = "passwords should be the same";
     autoHideToast(errMessage.value);
   }
+};
+
+const signIn = () => {
+  signInWithEmailAndPassword(auth, email.value, password.value)
+    .then(() => {
+      router.push("/");
+    })
+    .catch((error) => {
+      switch (error.code) {
+        case "auth/invalid-email":
+          errMessage.value = "invalid email or password";
+          autoHideToast(errMessage.value);
+          break;
+        case "auth/user-not-found":
+          errMessage.value = "No created account was found";
+          autoHideToast(errMessage.value);
+          break;
+        case "auth/wrong-password":
+          errMessage.value = "Enter correct password";
+          autoHideToast(errMessage.value);
+          break;
+        default:
+          errMessage.value = "Email or password are incorrect";
+          autoHideToast(errMessage.value);
+          break;
+      }
+    });
+};
+
+const LogIn = () => {
+  return currentRoute.value === "/sign-in" ? signIn() : register();
 };
 </script>
 
