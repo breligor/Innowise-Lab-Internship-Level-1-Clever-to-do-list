@@ -1,10 +1,10 @@
 <template>
   <main>
     <base-toast-transition>
-    <base-toast @closeToast="closeToast()" v-if="errMessage"
-      >{{ errMessage }}
-    </base-toast>
-  </base-toast-transition>
+      <base-toast @closeToast="closeToast()" v-if="errMessage"
+        >{{ errMessage }}
+      </base-toast>
+    </base-toast-transition>
     <div class="box">
       <div class="block is-flex is-justify-content-center">
         <h1 class="subtitle">create your todo</h1>
@@ -12,33 +12,29 @@
       <div class="tabs">
         <ul class="is-justify-content-center">
           <li>
-            <router-link class="link" to="/sign-in">Sign in</router-link>
+            <router-link active-class="active" class="link" to="/sign-in"
+              >Sign In</router-link
+            >
           </li>
-          <li class="is-active"><a>Register</a></li>
+          <li>
+            <router-link active-class="active" class="link" to="/register"
+              >Register</router-link
+            >
+          </li>
         </ul>
       </div>
       <div class="field">
-        <p class="control has-icons-left has-icons-right">
-          <base-input v-model="email" type="email" placeholder="Email" />
-        </p>
-      </div>
-      <div class="field">
-        <p class="control has-icons-left">
-          <base-input
-            v-model="password"
-            type="password"
-            placeholder="Password"
-          />
-        </p>
-      </div>
-      <div class="field">
-        <p class="control has-icons-left">
-          <base-input
-            v-model="confirmPassword"
-            type="password"
-            placeholder="Confirm password"
-          />
-        </p>
+        <div v-for="(input, i) in authForm" :key="i">
+          <p class="control has-icons-left has-icons-right mb-3">
+            <base-input
+              :type="input.type"
+              class="input"
+              v-model="input.model.value"
+              :placeholder="input.placeholder"
+            >
+            </base-input>
+          </p>
+        </div>
       </div>
       <div class="field">
         <p class="control is-flex is-justify-content-center">
@@ -50,19 +46,39 @@
 </template>
 
 <script setup>
-
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useFirebaseApi } from "@/composables/useFirebaseApi";
 import { useNotification } from "@/composables/useNotification";
 import { useRouter } from "vue-router";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
-const { auth } = useFirebaseApi();
-const { errMessage, closeToast, autoHideToast } = useNotification();
 const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");
 const router = useRouter();
+const { auth } = useFirebaseApi();
+const { errMessage, closeToast, autoHideToast } = useNotification();
+
+const currentRoute = computed(() => {
+  return router.currentRoute.value.path;
+});
+
+const authForm = computed(() => {
+  return currentRoute.value === "/sign-in"
+    ? [
+        { model: email, placeholder: "email", type: "email" },
+        { model: password, placeholder: "password", type: "password" },
+      ]
+    : [
+        { model: email, placeholder: "email", type: "email" },
+        { model: password, placeholder: "password", type: "password" },
+        {
+          model: confirmPassword,
+          placeholder: "confirm password",
+          type: "password",
+        },
+      ];
+});
 
 const register = () => {
   if (confirmPassword.value === password.value) {
@@ -109,5 +125,8 @@ main {
   height: 100vh;
   width: 100%;
   padding-top: 50px;
+}
+.active {
+  color: rgb(212, 56, 56);
 }
 </style>
