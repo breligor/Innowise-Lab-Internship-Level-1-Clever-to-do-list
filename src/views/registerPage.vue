@@ -54,12 +54,14 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import { useErrorHandler } from "@/composables/useErrorHandler";
 
 const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");
 const router = useRouter();
 const { auth } = useFirebaseApi();
+const { getError } = useErrorHandler();
 const { errMessage, closeToast, autoHideToast } = useNotification();
 
 const currentRoute = computed(() => {
@@ -67,80 +69,44 @@ const currentRoute = computed(() => {
 });
 
 const authForm = computed(() => {
-  return currentRoute.value === "/sign-in"
-    ? [
-        { model: email, placeholder: "email", type: "email" },
-        { model: password, placeholder: "password", type: "password" },
-      ]
-    : [
-        { model: email, placeholder: "email", type: "email" },
-        { model: password, placeholder: "password", type: "password" },
-        {
-          model: confirmPassword,
-          placeholder: "confirm password",
-          type: "password",
-        },
-      ];
+  let arrOfInputs = [
+    { model: email, placeholder: "email", type: "email",},
+    { model: password, placeholder: "password", type: "password",},
+    { model: confirmPassword, placeholder: "confirm password", type: "password",},
+  ];
+  return currentRoute.value !== "/sign-in"
+    ? arrOfInputs
+    : arrOfInputs.slice(0, 2);
 });
 
 const register = () => {
   if (confirmPassword.value === password.value) {
     createUserWithEmailAndPassword(auth, email.value, password.value)
       .then(() => {
-        errMessage.value = "Succesfully registered";
-        autoHideToast(errMessage.value);
+        errMessage.value = "Succesfully registered!";
         router.push("/");
+        autoHideToast();
       })
       .catch((error) => {
-        switch (error.code) {
-          case "auth/invalid-email":
-            errMessage.value = "please check your email";
-            autoHideToast(errMessage.value);
-            break;
-          case "auth/email-already-in-use":
-            errMessage.value = "this account already exists";
-            autoHideToast(errMessage.value);
-            break;
-          case "auth/internal-error":
-            errMessage.value = "Enter correct password";
-            autoHideToast(errMessage.value);
-            break;
-          default:
-            errMessage.value = "Email or password are incorrect";
-            autoHideToast(errMessage.value);
-            break;
-        }
+        errMessage.value = getError(error.code);
+        autoHideToast();
       });
   } else {
     errMessage.value = "passwords should be the same";
-    autoHideToast(errMessage.value);
+    autoHideToast();
   }
 };
 
 const signIn = () => {
   signInWithEmailAndPassword(auth, email.value, password.value)
     .then(() => {
+      errMessage.value = "Succesfully sign in!";
       router.push("/");
+      autoHideToast();
     })
     .catch((error) => {
-      switch (error.code) {
-        case "auth/invalid-email":
-          errMessage.value = "invalid email or password";
-          autoHideToast(errMessage.value);
-          break;
-        case "auth/user-not-found":
-          errMessage.value = "No created account was found";
-          autoHideToast(errMessage.value);
-          break;
-        case "auth/wrong-password":
-          errMessage.value = "Enter correct password";
-          autoHideToast(errMessage.value);
-          break;
-        default:
-          errMessage.value = "Email or password are incorrect";
-          autoHideToast(errMessage.value);
-          break;
-      }
+      errMessage.value = getError(error.code);
+      autoHideToast();
     });
 };
 
@@ -161,6 +127,6 @@ main {
   padding-top: 50px;
 }
 .active {
-  color: rgb(212, 56, 56);
+  color: rgb(56, 212, 137);
 }
 </style>
