@@ -111,7 +111,7 @@
 
 import calendarComponent from "@/components/calendarComponent.vue";
 import { ref, onMounted } from "vue";
-import { useFirebaseApi } from "@/firebaseApp";
+import { useFirebaseApi } from "@/composables/useFirebaseApi";
 import {
   doc,
   collection,
@@ -122,10 +122,10 @@ import {
   query,
   orderBy,
 } from "@firebase/firestore";
-import { useNotificationApi } from "@/toastFunctions";
+import { useNotification } from "@/composables/useNotification";
 
 const { errMessage, closeToast, autoHideToast, showToastWithDelay } =
-  useNotificationApi();
+  useNotification();
 const { auth, dbStore } = useFirebaseApi();
 const user = auth.currentUser;
 const userId = user.uid;

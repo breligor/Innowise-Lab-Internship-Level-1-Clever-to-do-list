@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { useFirebaseApi } from "@/firebaseApp";
+import { useFirebaseApi } from "@/composables/useFirebaseApi";
 
 const { getCurrentUser } = useFirebaseApi();
 
@@ -13,8 +13,8 @@ const router = createRouter({
         requireAuth: true,
       },
     },   
-    { path: "/register", component: () => import("../views/registerPage.vue") },
-    { path: "/sign-in", component: () => import("../views/signInPage.vue") },   
+    { path: "/register", name:"Register",component: () => import("../views/registerPage.vue") },
+    { path: "/sign-in", name:"Sign In", component: () => import("../views/registerPage.vue") },   
     
   ],
 });

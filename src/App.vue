@@ -22,10 +22,10 @@
 import { onMounted, onBeforeMount, ref } from "vue";
 import { useRouter } from "vue-router";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { useFirebaseApi } from "@/firebaseApp";
-import { useNotificationApi } from "@/toastFunctions";
+import { useFirebaseApi } from "@/composables/useFirebaseApi";
+import { useNotification } from "@/composables/useNotification";
 
-const { errMessage, autoHideToast } = useNotificationApi();
+const { errMessage, autoHideToast, closeToast } = useNotification();
 const router = useRouter();
 const isLoggedIn = ref(false);
 const { auth } = useFirebaseApi();

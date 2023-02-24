@@ -1,6 +1,6 @@
 import { ref } from "vue";
 
-export function useNotificationApi() {
+export function useNotification() {
   const errMessage = ref("");
 
   const closeToast = () => {
