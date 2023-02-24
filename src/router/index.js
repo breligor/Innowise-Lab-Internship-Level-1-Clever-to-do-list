@@ -20,17 +20,17 @@ const router = createRouter({
 });
 
 //guard to prevent transition to feed page without auth
-router.beforeEach(async (to, from, next) => {
-  if (to.matched.some((record) => record.meta.requireAuth)) {
-    if (await getCurrentUser()) {
-      next();
-    } else {
-      alert("PLEASE SIGN IN !");
-      next("/sign-in");
-    }
-  } else {
-    next();
-  }
-});
+// router.beforeEach(async (to, from, next) => {
+//   if (to.matched.some((record) => record.meta.requireAuth)) {
+//     if (await getCurrentUser()) {
+//       next();
+//     } else {
+//       alert("PLEASE SIGN IN !");
+//       next("/sign-in");
+//     }
+//   } else {
+//     next();
+//   }
+// });
 
 export default router;

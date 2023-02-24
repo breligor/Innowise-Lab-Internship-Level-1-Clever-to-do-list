@@ -19,7 +19,7 @@
 
 <script setup>
 
-import { onMounted, onBeforeMount, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useFirebaseApi } from "@/composables/useFirebaseApi";
@@ -30,15 +30,15 @@ const router = useRouter();
 const isLoggedIn = ref(false);
 const { auth } = useFirebaseApi();
 
-onBeforeMount(() => {
-  onAuthStateChanged(auth, (user) => {
-    if (!user) {
-      router.replace("/sign-in");
-    } else if (router.path == "/register" || router.path == "sign-in") {
-      router.replace("/");
-    }
-  });
-});
+// onBeforeMount(() => {
+//   onAuthStateChanged(auth, (user) => {
+//     if (!user) {
+//       router.replace("/sign-in");
+//     } else if (router.path == "/register" || router.path == "sign-in") {
+//       router.replace("/");
+//     }
+//   });
+// });
 
 onMounted(() => {
   onAuthStateChanged(auth, (user) => {
