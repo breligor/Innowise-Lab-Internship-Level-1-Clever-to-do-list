@@ -11,32 +11,16 @@
     </base-toast-transition>
     <div class="wrapperTodo">
       <div class="title has-text-centered">WHAT's TODO</div>
-      <form @submit.prevent="addTodo()">
-        <div class="field is-grouped mb-5">
-          <p class="control is-expanded">
-            <base-input
-              v-model="newTodoContent"
-              type="text"
-              placeholder="Add a todo..."
-            />
-          </p>
-          <p class="control">
-            <base-input v-model="makeDay" type="date" required />
-          </p>
-          <p class="control">
-            <base-button :disabled="!newTodoContent" class="is-info">
-              Add
-            </base-button>
-          </p>
-        </div>
-      </form>
+
+      <todoForm @addTodo="addTodo" :newTodoContent="newTodoContent" />
+      
       <div class="todoInfo block is-flex is-justify-content-space-between">
         <div class="todoQuantity block">
           {{ "Количество заданий: " + todosForRender.length }}
         </div>
         <div>
           <base-button @click="showAllTasks()" class="is-info">
-          show all
+            show all
           </base-button>
         </div>
       </div>
@@ -48,7 +32,8 @@
           @editTodo="editTodo"
           @doneEdit="doneEdit"
           v-for="todo in todosForRender"
-          :key="todo.id"/>
+          :key="todo.id"
+        />
       </div>
     </div>
   </main>
@@ -56,6 +41,7 @@
 
 <script setup>
 import todoItem from "@/components/todoItem.vue";
+import todoForm from "@/components/todoForm.vue";
 import calendarComponent from "@/components/calendarComponent.vue";
 import { ref, onMounted } from "vue";
 import { useFirebaseApi } from "@/composables/useFirebaseApi";
@@ -78,23 +64,21 @@ const user = auth.currentUser;
 const userId = user.uid;
 const todos = ref([]);
 const todosForRender = ref([]); //array to filter
-const newTodoContent = ref("");
 const todosCollectionRef = collection(dbStore, `${userId}`);
 const todosCollectionQuery = query(todosCollectionRef, orderBy("date", "desc"));
-const makeDay = ref("");
 
-const addTodo = () => {
+const addTodo = (newTodoContent, makeDay) => {
   addDoc(todosCollectionRef, {
-    content: newTodoContent.value,
+    content: newTodoContent,
     done: false,
     date: Date.now(),
     userId: userId,
     mail: user.email,
     editing: false,
-    taskDate: makeDay.value,
+    taskDate: makeDay,
   });
-  newTodoContent.value = "";
-  makeDay.value = "";
+  newTodoContent = "";
+  makeDay = "";
 };
 
 //подписка FB
@@ -142,7 +126,6 @@ const editTodo = (todo) => {
 };
 
 const doneEdit = (todo, newContent, id) => {
-  
   todo.content = newContent;
   todo.editing = false;
   const index = todosForRender.value.findIndex((todo) => todo.id === id);
