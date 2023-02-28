@@ -12,8 +12,8 @@
     <div class="wrapperTodo">
       <div class="title has-text-centered">WHAT's TODO</div>
 
-      <todoForm @addTodo="addTodo" :newTodoContent="newTodoContent" />
-      
+      <todoForm @addTodo="sendTodoToFirebase" />
+
       <div class="todoInfo block is-flex is-justify-content-space-between">
         <div class="todoQuantity block">
           {{ "Количество заданий: " + todosForRender.length }}
@@ -44,44 +44,27 @@ import todoItem from "@/components/todoItem.vue";
 import todoForm from "@/components/todoForm.vue";
 import calendarComponent from "@/components/calendarComponent.vue";
 import { ref, onMounted } from "vue";
-import { useFirebaseApi } from "@/composables/useFirebaseApi";
-import {
-  doc,
-  collection,
-  onSnapshot,
-  addDoc,
-  deleteDoc,
-  updateDoc,
-  query,
-  orderBy,
-} from "@firebase/firestore";
+import { doc, onSnapshot, deleteDoc, updateDoc } from "@firebase/firestore";
 import { useNotification } from "@/composables/useNotification";
+import { useAddDocToFirebase } from "@/composables/useAddDocToFirebase";
 
-const { errMessage, closeToast, autoHideToast, showToastWithDelay } =
-  useNotification();
-const { auth, dbStore } = useFirebaseApi();
-const user = auth.currentUser;
-const userId = user.uid;
+const {
+  addTodo,
+  todosCollectionRef,
+  todosCollectionQuery,
+  userId,
+  user,  
+} = useAddDocToFirebase();
+const { errMessage } =  useNotification();
 const todos = ref([]);
 const todosForRender = ref([]); //array to filter
-const todosCollectionRef = collection(dbStore, `${userId}`);
-const todosCollectionQuery = query(todosCollectionRef, orderBy("date", "desc"));
 
-const addTodo = (newTodoContent, makeDay) => {
-  addDoc(todosCollectionRef, {
-    content: newTodoContent,
-    done: false,
-    date: Date.now(),
-    userId: userId,
-    mail: user.email,
-    editing: false,
-    taskDate: makeDay,
-  });
-  newTodoContent = "";
-  makeDay = "";
+//useAddDocToFirebase()
+const sendTodoToFirebase = (text, data) => {
+  addTodo(text, data);
 };
 
-//подписка FB
+//subscribe FB
 onMounted(() => {
   onSnapshot(todosCollectionQuery, (querySnapshot) => {
     const fbTodos = [];
@@ -102,8 +85,6 @@ onMounted(() => {
     todos.value = fbTodos;
     todosForRender.value = fbTodos;
   });
-  showToastWithDelay("Succesfully signed in");
-  autoHideToast(errMessage.value);
 });
 
 //del btn
