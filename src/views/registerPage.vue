@@ -86,7 +86,7 @@ const LogIn = () => {
       router.push("/");     
     })
     .catch((error) => {
-      errMessage.value = getError(error);
+      errMessage.value = getError(error.code);
       autoHideToast();
     });
 };
