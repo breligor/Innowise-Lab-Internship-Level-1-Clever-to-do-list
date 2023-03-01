@@ -47,20 +47,16 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import { useFirebaseApi } from "@/composables/useFirebaseApi";
 import { useNotification } from "@/composables/useNotification";
 import { useRouter } from "vue-router";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
 import { useErrorHandler } from "@/composables/useErrorHandler";
+import { useSignInSignUpFB } from "@/composables/useSignInSignUpFB";
 
+const { authObject } = useSignInSignUpFB();
 const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");
 const router = useRouter();
-const { auth } = useFirebaseApi();
 const { getError } = useErrorHandler();
 const { errMessage, closeToast, autoHideToast } = useNotification();
 
@@ -70,8 +66,8 @@ const currentRoute = computed(() => {
 
 const authForm = computed(() => {
   let arrOfInputs = [
-    { model: email, placeholder: "email", type: "email",},
-    { model: password, placeholder: "password", type: "password",},
+    { model: email, placeholder: "email", type: "email"},
+    { model: password, placeholder: "password", type: "password"},
     { model: confirmPassword, placeholder: "confirm password", type: "password",},
   ];
   return currentRoute.value !== "/sign-in"
@@ -79,39 +75,20 @@ const authForm = computed(() => {
     : arrOfInputs.slice(0, 2);
 });
 
-const register = () => {
-  if (confirmPassword.value === password.value) {
-    createUserWithEmailAndPassword(auth, email.value, password.value)
-      .then(() => {
-        errMessage.value = "Succesfully registered!";
-        router.push("/");
-        autoHideToast();
-      })
-      .catch((error) => {
-        errMessage.value = getError(error.code);
-        autoHideToast();
-      });
-  } else {
-    errMessage.value = "passwords should be the same";
-    autoHideToast();
-  }
-};
-
-const signIn = () => {
-  signInWithEmailAndPassword(auth, email.value, password.value)
+const LogIn = () => {
+  authObject[currentRoute.value](
+    email.value,
+    password.value,
+    confirmPassword.value,
+  )
     .then(() => {
-      errMessage.value = "Succesfully sign in!";
-      router.push("/");
-      autoHideToast();
+      errMessage.value = "Succesfully done!";
+      router.push("/");     
     })
     .catch((error) => {
       errMessage.value = getError(error.code);
       autoHideToast();
     });
-};
-
-const LogIn = () => {
-  return currentRoute.value === "/sign-in" ? signIn() : register();
 };
 </script>
 

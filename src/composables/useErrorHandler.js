@@ -8,12 +8,12 @@ export function useErrorHandler() {
       "auth/internal-error": () => "Enter correct password",
       "auth/user-not-found": () => "No created account was found",
       "auth/wrong-password": () => "Enter correct password",
-      default: () => "Email or password are incorrect",
+      "wrong-confirm": () => "wrong password confirmation ",      
     };
     if (errors[type]) {
         funcWithDefault = errors[type];
     } else {
-        funcWithDefault = errors["default"];
+        funcWithDefault = errors["wrong-confirm"];
     }
     return funcWithDefault();
   }
