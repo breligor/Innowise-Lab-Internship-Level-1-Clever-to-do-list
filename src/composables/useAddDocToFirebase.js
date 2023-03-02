@@ -3,7 +3,9 @@ import {
   collection,
   addDoc,
   orderBy,
-  query,  
+  doc,
+  query,
+  deleteDoc,  
 } from "@firebase/firestore";
 
 const { auth, dbStore } = useFirebaseApi();
@@ -24,6 +26,11 @@ export function useAddDocToFirebase() {
       taskDate: todoDate,
     });
   };
+
+  const deleteTodo = (id) => {
+    deleteDoc(doc(todosCollectionRef, id));
+  };
+  
   const todosCollectionQuery = query(
     todosCollectionRef,
     orderBy("date", "desc")
@@ -34,6 +41,7 @@ export function useAddDocToFirebase() {
     todosCollectionQuery,
     todosCollectionRef,
     userId,
-    user,    
+    user,   
+    deleteTodo, 
   };
 }
