@@ -44,13 +44,13 @@ import todoItem from "@/components/todoItem.vue";
 import todoForm from "@/components/todoForm.vue";
 import calendarComponent from "@/components/calendarComponent.vue";
 import { onMounted } from "vue";
-import { doc, deleteDoc, updateDoc } from "@firebase/firestore";
+import { doc, updateDoc } from "@firebase/firestore";
 import { useNotification } from "@/composables/useNotification";
 import { useAddDocToFirebase } from "@/composables/useAddDocToFirebase";
 import { useRealTimeUpdateFB } from "@/composables/useRealTimeUpdateFB";
 
 const { errMessage } = useNotification();
-const { addTodo, todosCollectionRef } = useAddDocToFirebase();
+const { addTodo, deleteTodo, todosCollectionRef } = useAddDocToFirebase();
 const { unsub, todos, todosForRender } = useRealTimeUpdateFB();
 
 //useAddDocToFirebase()  add new todo to FB collection
@@ -62,11 +62,6 @@ const sendTodoToFirebase = (text, data) => {
 onMounted(() => {
   unsub();
 });
-
-//del todo
-const deleteTodo = (id) => {
-  deleteDoc(doc(todosCollectionRef, id));
-};
 
 //done/in-progress btn
 const toggleDone = (id) => {
