@@ -33,4 +33,4 @@ export function useFirebaseApi() {
   return { auth, getCurrentUser, dbStore };
 }
 
-//export default { fbApp: fbApp };
+

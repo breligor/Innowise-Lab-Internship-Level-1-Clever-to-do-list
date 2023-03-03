@@ -9,7 +9,3 @@ export default {
   name: "BaseButton",
 };
 </script>
-
-<style lang="scss" scoped>
-@import "bulma/css/bulma.min.css";
-</style>
