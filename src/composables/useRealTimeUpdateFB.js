@@ -23,8 +23,7 @@ export function useRealTimeUpdateFB() {
           editing: false,
           taskDate: new Date(doc.data().taskDate).toLocaleDateString(),
         };
-        fbTodos.push(todo);
-        console.log(fbTodos);
+        fbTodos.push(todo);        
       });
       todos.value = fbTodos;
       todosForRender.value = fbTodos;

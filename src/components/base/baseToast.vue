@@ -1,6 +1,6 @@
 <template>
   <div class="notification is-danger is-light toast">
-    <button class="delete" @click="closeToast()"></button>
+    <button class="delete" @click="closeToast"></button>
     <slot></slot>
   </div>
 </template>
