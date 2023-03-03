@@ -93,7 +93,6 @@ const LogIn = () => {
 </script>
 
 <style lang="scss" scoped>
-@import "bulma/css/bulma.min.css";
 main {
   display: flex;
   justify-content: start;

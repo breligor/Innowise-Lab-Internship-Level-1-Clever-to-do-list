@@ -55,6 +55,7 @@ const { errMessage } = useNotification();
 const { addTodo, deleteTodo, todosCollectionRef } = useAddDocToFirebase();
 const { unsub, todos, todosForRender } = useRealTimeUpdateFB();
 
+
 //useAddDocToFirebase()  add new todo to FB collection
 const sendTodoToFirebase = (text, data) => {
   addTodo(text, data);
@@ -88,7 +89,7 @@ const doneEdit = (todo, newContent, id) => {
   });
 };
 
-// get day from Calendar component to filter tasks with selected date
+// get day from Calendar component to filter tasks with selected date 
 const filteredTasksByDate = (chosenDate) => {
   todosForRender.value = todos.value.filter((it) => it.taskDate === chosenDate);
 };
@@ -97,6 +98,7 @@ const filteredTasksByDate = (chosenDate) => {
 const showAllTasks = () => {
   todosForRender.value = todos.value;
 };
+
 </script>
 
 <style lang="scss" scoped>

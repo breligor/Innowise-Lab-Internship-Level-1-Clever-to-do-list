@@ -30,8 +30,3 @@ export default {
   }
 
 </script>
-
-<style lang="scss" scoped>
-@import "bulma/css/bulma.min.css";
-
-</style>
