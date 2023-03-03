@@ -43,56 +43,27 @@
 import todoItem from "@/components/todoItem.vue";
 import todoForm from "@/components/todoForm.vue";
 import calendarComponent from "@/components/calendarComponent.vue";
-import { ref, onMounted } from "vue";
-import { doc, onSnapshot, deleteDoc, updateDoc } from "@firebase/firestore";
+import { onMounted } from "vue";
+import { doc, updateDoc } from "@firebase/firestore";
 import { useNotification } from "@/composables/useNotification";
 import { useAddDocToFirebase } from "@/composables/useAddDocToFirebase";
+import { useRealTimeUpdateFB } from "@/composables/useRealTimeUpdateFB";
 
-const {
-  addTodo,
-  todosCollectionRef,
-  todosCollectionQuery,
-  userId,
-  user,  
-} = useAddDocToFirebase();
-const { errMessage } =  useNotification();
-const todos = ref([]);
-const todosForRender = ref([]); //array to filter
+const { errMessage } = useNotification();
+const { addTodo, deleteTodo, todosCollectionRef } = useAddDocToFirebase();
+const { unsub, todos, todosForRender } = useRealTimeUpdateFB();
 
-//useAddDocToFirebase()
+//useAddDocToFirebase()  add new todo to FB collection
 const sendTodoToFirebase = (text, data) => {
   addTodo(text, data);
 };
 
-//subscribe FB
+//useRealTimeUpdateFB() listen to changes and return data (todosForRender) for rendering
 onMounted(() => {
-  onSnapshot(todosCollectionQuery, (querySnapshot) => {
-    const fbTodos = [];
-
-    querySnapshot.forEach((doc) => {
-      const todo = {
-        id: doc.id,
-        content: doc.data().content,
-        done: doc.data().done,
-        userId: userId,
-        mail: user.email,
-        editing: false,
-        taskDate: new Date(doc.data().taskDate).toLocaleDateString(),
-      };
-      fbTodos.push(todo);
-    });
-
-    todos.value = fbTodos;
-    todosForRender.value = fbTodos;
-  });
+  unsub();
 });
 
-//del btn
-const deleteTodo = (id) => {
-  deleteDoc(doc(todosCollectionRef, id));
-};
-
-//update
+//done/in-progress btn
 const toggleDone = (id) => {
   const index = todosForRender.value.findIndex((todo) => todo.id === id);
 
@@ -101,7 +72,7 @@ const toggleDone = (id) => {
   });
 };
 
-//editing
+//todo editing by dbl click and update with new value
 const editTodo = (todo) => {
   todo.editing = true;
 };
@@ -115,12 +86,12 @@ const doneEdit = (todo, newContent, id) => {
   });
 };
 
-// получаем дату дня из компонента Calendar для фильтрации тасок по дню и фильтруем массив по которому рендерим
+// get day from Calendar component to filter tasks with selected date 
 const filteredTasksByDate = (chosenDate) => {
   todosForRender.value = todos.value.filter((it) => it.taskDate === chosenDate);
 };
 
-// показать все таски пользователя за все дни
+// show all user's tasks
 const showAllTasks = () => {
   todosForRender.value = todos.value;
 };
